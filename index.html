@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
-    <img src="zoudehu.jpg" alt="个人照片" style="width:200px;height:auto;border-radius:50%;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人简历</title>
@@ -10,41 +9,72 @@
         body {
             font-family: 'Helvetica', Arial, sans-serif;
             color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
             background-color: #fff;
             margin: 40px auto;
-            max-width: 750px;
-            padding: 20px;
+            max-width: 800px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
         .header {
             text-align: center;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid #0366d6;
+            padding-bottom: 10px;
         }
 
         .header h1 {
-            margin: 0;
+            margin: 10px 0;
             color: #0366d6;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 1.2em;
+            color: #555;
         }
 
         .section-title {
-            color: #333;
-            border-bottom: 1px solid #bbb;
+            color: #0366d6;
+            border-bottom: 2px solid #ddd;
             padding-bottom: 5px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
         }
 
-        img {
+        .profile-img {
+            width: 150px;
+            height: auto;
             border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
 
         .experience,
-        .education {
-            margin-bottom: 20px;
+        .education,
+        .award {
+            margin-bottom: 30px;
         }
 
         p {
             text-align: justify;
-            line-height: 1.6;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .qr-code {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
         }
     </style>
 </head>
@@ -54,10 +84,10 @@
         <div class="header">
             <h1>邹德虎</h1>
             <p>电力系统研发架构师、技术总监</p>
+            <img src="zoudehu.jpg" alt="个人照片" class="profile-img">
         </div>
         <div class="education">
             <h2 class="section-title">基本情况</h2>
-            <p></p>
             <p>1986年出生，高级工程师，长期从事电力系统研发与工程应用</p>
             <p>专业方向为：电力系统建模仿真、调度控制与自动化技术</p>
         </div>
@@ -72,6 +102,7 @@
             <p>2007年至2008年，国网安徽马鞍山供电公司，从事500kV当涂变电站运维值班工作。</p>
             <p>2010年至2013年，助理工程师，国电南瑞科技股份有限公司（电网分公司），从事电网调度自动化系统OPEN-3000、D5000的工程实施维护。有接近100个电网调度中心的现场工程经验。</p>
             <p>2013年至2017年，工程师、高工，国电南瑞科技股份有限公司（系统研发中心），从事电网调度自动化系统D5000的研究与开发。其中第2完成人身份的项目《面向城市骨干电网广域层次化自愈系统关键技术及应用》被中国电机工程学会鉴定为“成果整体达到国际领先水平”。
+            </p>
             <p>根据国电南瑞科技股份有限公司财务统计，本人主持研发的部分产品新增销售额11104.15万元，新增利润3822万元。</p>
             <p>2018年-2020年2月，高级工程师，南瑞研究院产业研究中心，参与南瑞集团战略技术规划制定。从事主动配电网和微网的规划仿真研究。</p>
             <p>2020年2月-至今，东南大学专职科研人员，主持研发国产自主可控的电力系统实时电磁仿真平台。该平台完全以工业级C++开发，不依赖国外任何商业平台，总代码量接近50万行。</p>
@@ -94,7 +125,7 @@
             <p>zoupaper@163.com</p>
             <p>ORCID:0000-0002-3359-0145</p>
             <p>
-                 <img src="weixin.jpg" alt="微信二维码" style="display: block;">
+                <img src="weixin.jpg" alt="微信二维码" class="qr-code">
             </p>
         </div>
     </div>
