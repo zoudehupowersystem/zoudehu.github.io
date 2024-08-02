@@ -59,7 +59,8 @@
 
         .experience,
         .education,
-        .award {
+        .award,
+        .articles {
             margin-bottom: 30px;
         }
 
@@ -75,6 +76,32 @@
             max-width: 100%;
             height: auto;
             margin: 20px auto;
+        }
+
+        .articles ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .articles li {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .articles a {
+            text-decoration: none;
+            color: #0366d6;
+            transition: color 0.3s;
+        }
+
+        .articles a:hover {
+            color: #024a8c;
+        }
+
+        .divider {
+            height: 2px;
+            background-color: #ddd;
+            margin: 30px 0;
         }
     </style>
 </head>
@@ -128,13 +155,15 @@
                 <img src="weixin.jpg" alt="微信二维码" class="qr-code">
             </p>
         </div>
-    </div>
-            <div class="articles">
+        <div class="divider"></div>
+        <div class="articles">
             <h2 class="section-title">文章列表</h2>
             <ul>
-                <li><a href="为什么工程师需要学好物理学.html">我的第一篇文章</a></li>
+                <li><a href="为什么工程师需要学好物理学.html">为什么工程师需要学好物理学</a></li>
+                <!-- 可以添加更多文章链接 -->
             </ul>
         </div>
+    </div>
 </body>
 
 </html>
