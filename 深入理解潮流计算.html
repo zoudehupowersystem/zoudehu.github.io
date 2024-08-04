@@ -3040,8 +3040,10 @@
         实现第三层次的编程，非常强调“矩阵思维”。教科书上的推导虽然是基于矩阵的，但是大部分人未必真正的理解。他们需要一个实例，按照循环把矩阵中的每个元素推导出来。在程序实现过程中，大家都习惯写出大量的循环语句，而不是直接对矩阵进行操作。
       </p>
       <p>下面列举一个实例。牛顿法潮流计算，雅克比矩阵的形成非常重要。常规上都是循环求解雅克比矩阵的元素。但是康奈尔大学的MATPOWER软件形成雅克比矩阵非常有参考价值，直接用矩阵运算求出复数形式的雅克比矩阵：</p>
-      <p>dS_dVm = diagV * conj(Ybus * diagVnorm) + conj(diagIbus) * diagVnorm</p>
-      <p>dS_dVa = 1j * diagV * conj(diagIbus - Ybus * diagV)</p>
+      <pre><code class="language-MATLAB">dS_dVm = diagV * <span class="hljs-built_in">conj</span>(Ybus * diagVnorm) + <span class="hljs-built_in">conj</span>(diagIbus) * diagVnorm
+
+dS_dVa = <span class="hljs-number">1</span><span class="hljs-built_in">j</span> * diagV * <span class="hljs-built_in">conj</span>(diagIbus - Ybus * diagV)
+</code></pre>
       <p>dS_dVm是复数功率向量对电压幅值向量；dS_dVa是复数功率向量对电压角度向量。
         我原本以为，这种求解方法与常规方法在数学上是等效的。没想到经过实测，收敛性也大幅度提高了。可见基于矩阵的推导的确抓住了问题的本质。（补充一点：如果采用GPU加速，由于并行的粒度要求非常小，完全基于矩阵操作可能不太适用，需要更加细粒度的并行化处理。但整体框架基于矩阵设计是没有任何问题的）
       </p>
@@ -3793,6 +3795,9 @@
                           <mi>U</mi>
                           <mi>a</mi>
                         </msub>
+                        <mi>cos</mi>
+                        <mo>⁡</mo>
+                        <mi>δ</mi>
                         <mo>−</mo>
                         <msub>
                           <mi>U</mi>
@@ -3803,7 +3808,7 @@
                       <mi>X</mi>
                     </mfrac>
                   </mrow>
-                  <annotation encoding="application/x-tex">Q \approx \frac{U_b (U_a-U_b)}{X}
+                  <annotation encoding="application/x-tex">Q \approx \frac{U_b (U_a \cos \delta -U_b)}{X}
                   </annotation>
                 </semantics>
               </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
@@ -3837,11 +3842,14 @@
                                               class="mord mathnormal mtight">a</span></span></span></span><span
                                         class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
                                         style="height:0.15em;"><span></span></span></span></span></span></span><span
-                                class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span
-                                class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span
-                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
-                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
-                                        class="vlist" style="height:0.3361em;"><span
+                                class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span
+                                class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal"
+                                style="margin-right:0.03785em;">δ</span><span class="mspace"
+                                style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                                style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal"
+                                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span
+                                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                        style="height:0.3361em;"><span
                                           style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span
                                             class="pstrut" style="height:2.7em;"></span><span
                                             class="sizing reset-size6 size3 mtight"><span
@@ -3870,6 +3878,9 @@
                           <mi>U</mi>
                           <mi>a</mi>
                         </msub>
+                        <mi>cos</mi>
+                        <mo>⁡</mo>
+                        <mi>δ</mi>
                         <mo>−</mo>
                         <msub>
                           <mi>U</mi>
@@ -3880,7 +3891,7 @@
                       <mi>R</mi>
                     </mfrac>
                   </mrow>
-                  <annotation encoding="application/x-tex">P \approx \frac{U_b (U_a-U_b)}{R}
+                  <annotation encoding="application/x-tex">P \approx \frac{U_b (U_a \cos \delta -U_b)}{R}
                   </annotation>
                 </semantics>
               </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
@@ -3915,11 +3926,14 @@
                                               class="mord mathnormal mtight">a</span></span></span></span><span
                                         class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
                                         style="height:0.15em;"><span></span></span></span></span></span></span><span
-                                class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span
-                                class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span
-                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
-                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
-                                        class="vlist" style="height:0.3361em;"><span
+                                class="mspace" style="margin-right:0.1667em;"></span><span class="mop">cos</span><span
+                                class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal"
+                                style="margin-right:0.03785em;">δ</span><span class="mspace"
+                                style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                                style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal"
+                                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span
+                                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                        style="height:0.3361em;"><span
                                           style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span
                                             class="pstrut" style="height:2.7em;"></span><span
                                             class="sizing reset-size6 size3 mtight"><span
@@ -4003,6 +4017,781 @@
       </p>
       <p>
         正如周教授所言，这位年轻教师是典型的只见树木不见森林，把有边界条件的结论不加分析的推广至整体系统，闹了笑话。假设系统电压不变，减少输送的无功，则系统整体电压水平更加下降了，此时电源电压必须进一步下降，这是在危险的边缘操作（从之前的公式中不难看出问题在哪）。通过减少无功提高电压的前提是，受端系统必须有足够的无功支撑。
+      </p>
+      <p>通过两节点潮流模型，还可以加强对电压稳定性的理解。下面我们假设<span class="katex"><span class="katex-mathml"><math
+              xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <mi>a</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">a</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.4306em;"></span><span
+                class="mord mathnormal">a</span></span></span></span>侧连接理想电压源，<span class="katex"><span
+            class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <mi>b</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">b</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.6944em;"></span><span
+                class="mord mathnormal">b</span></span></span></span>侧连接负荷，这就是最简单的供电模型。为了使推导简化，我们假设电抗远大于电阻，同时令：</p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mi>k</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                      <msub>
+                        <mi>U</mi>
+                        <mi>b</mi>
+                      </msub>
+                      <msub>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                      </msub>
+                    </mfrac>
+                  </mrow>
+                  <annotation encoding="application/x-tex"> k = \frac{U_b}{ U_a}
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:0.6944em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03148em;">k</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:2.1963em;vertical-align:-0.836em;"></span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.1514em;"><span
+                                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span
+                            style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.3361em;"><span
+                                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">b</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.836em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+      <p>则有：</p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mfrac>
+                      <mrow>
+                        <mi>Q</mi>
+                        <mi>X</mi>
+                      </mrow>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                        <mn>2</mn>
+                      </msubsup>
+                    </mfrac>
+                    <mo>+</mo>
+                    <msup>
+                      <mi>k</mi>
+                      <mn>2</mn>
+                    </msup>
+                    <mo>=</mo>
+                    <mi>k</mi>
+                    <mi>cos</mi>
+                    <mo>⁡</mo>
+                    <mi>δ</mi>
+                  </mrow>
+                  <annotation encoding="application/x-tex"> \frac{Q X}{ U_a^2} + k^2 = k \cos \delta
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:2.2933em;vertical-align:-0.933em;"></span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.7401em;"><span
+                                          style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span><span
+                                          style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span
+                            style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.07847em;">QX</span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.933em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.8641em;"></span><span class="mord"><span class="mord mathnormal"
+                    style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span
+                        class="vlist-r"><span class="vlist" style="height:0.8641em;"><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                  class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.6944em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03148em;">k</span><span class="mspace"
+                  style="margin-right:0.1667em;"></span><span class="mop">cos</span><span class="mspace"
+                  style="margin-right:0.1667em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03785em;">δ</span></span></span></span></span></p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mfrac>
+                      <mrow>
+                        <mi>P</mi>
+                        <mi>X</mi>
+                      </mrow>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                        <mn>2</mn>
+                      </msubsup>
+                    </mfrac>
+                    <mo>=</mo>
+                    <mi>k</mi>
+                    <mi>sin</mi>
+                    <mo>⁡</mo>
+                    <mi>δ</mi>
+                  </mrow>
+                  <annotation encoding="application/x-tex"> \frac{P X}{ U_a^2} = k \sin \delta
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:2.2933em;vertical-align:-0.933em;"></span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.7401em;"><span
+                                          style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span><span
+                                          style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span
+                            style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.07847em;">PX</span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.933em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.6944em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03148em;">k</span><span class="mspace"
+                  style="margin-right:0.1667em;"></span><span class="mop">sin</span><span class="mspace"
+                  style="margin-right:0.1667em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03785em;">δ</span></span></span></span></span></p>
+      <p>汇总得到：</p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <msup>
+                      <mi>k</mi>
+                      <mn>4</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <msup>
+                      <mi>k</mi>
+                      <mn>2</mn>
+                    </msup>
+                    <mo stretchy="false">(</mo>
+                    <mn>2</mn>
+                    <mfrac>
+                      <mrow>
+                        <mi>Q</mi>
+                        <mi>X</mi>
+                      </mrow>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                        <mn>2</mn>
+                      </msubsup>
+                    </mfrac>
+                    <mo>−</mo>
+                    <mn>1</mn>
+                    <mo stretchy="false">)</mo>
+                    <mo>+</mo>
+                    <mfrac>
+                      <mrow>
+                        <msup>
+                          <mi>P</mi>
+                          <mn>2</mn>
+                        </msup>
+                        <mo>+</mo>
+                        <msup>
+                          <mi>Q</mi>
+                          <mn>2</mn>
+                        </msup>
+                      </mrow>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                        <mn>4</mn>
+                      </msubsup>
+                    </mfrac>
+                    <msup>
+                      <mi>X</mi>
+                      <mn>2</mn>
+                    </msup>
+                  </mrow>
+                  <annotation encoding="application/x-tex"> k^4 + k^2 (2\frac{Q X}{ U_a^2}-1) + \frac{P^2+Q^2}{ U_a^4}
+                    X^2
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:0.9474em;vertical-align:-0.0833em;"></span><span class="mord"><span
+                    class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span
+                      class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight">4</span></span></span></span></span></span></span></span><span
+                  class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:2.2933em;vertical-align:-0.933em;"></span><span class="mord"><span
+                    class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span
+                      class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                  class="mopen">(</span><span class="mord">2</span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.7401em;"><span
+                                          style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span><span
+                                          style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span
+                            style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.07847em;">QX</span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.933em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span
+                  class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span
+                  class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span
+                class="base"><span class="strut" style="height:2.4241em;vertical-align:-0.933em;"></span><span
+                  class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span
+                      class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span
+                            style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span
+                              class="mord"><span class="mord"><span class="mord mathnormal"
+                                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span
+                                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                        style="height:0.7401em;"><span
+                                          style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span><span
+                                          style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">4</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span
+                            style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.13889em;">P</span><span
+                                  class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist"
+                                        style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                                class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span
+                                class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span
+                                  class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span
+                                      class="vlist-r"><span class="vlist" style="height:0.8141em;"><span
+                                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.933em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal"
+                    style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span
+                        class="vlist-r"><span class="vlist" style="height:0.8641em;"><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>
+      </p>
+      <p>把<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msup>
+                    <mi>k</mi>
+                    <mn>2</mn>
+                  </msup>
+                </mrow>
+                <annotation encoding="application/x-tex">k^2</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t"><span
+                      class="vlist-r"><span class="vlist" style="height:0.8141em;"><span
+                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>当成一个变量，则这个是简单的一元二次方程，很容易根据中学数学的知识得到<span
+          class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <mi>k</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">k</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.6944em;"></span><span class="mord mathnormal"
+                style="margin-right:0.03148em;">k</span></span></span></span>的最小值，如下：</p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mi>k</mi>
+                    <mo>=</mo>
+                    <msqrt>
+                      <mrow>
+                        <mfrac>
+                          <mn>1</mn>
+                          <mn>2</mn>
+                        </mfrac>
+                        <mo stretchy="false">(</mo>
+                        <mn>1</mn>
+                        <mo>−</mo>
+                        <mfrac>
+                          <mrow>
+                            <mn>2</mn>
+                            <mi>Q</mi>
+                            <mi>X</mi>
+                          </mrow>
+                          <msubsup>
+                            <mi>U</mi>
+                            <mi>a</mi>
+                            <mn>2</mn>
+                          </msubsup>
+                        </mfrac>
+                        <mo stretchy="false">)</mo>
+                      </mrow>
+                    </msqrt>
+                  </mrow>
+                  <annotation encoding="application/x-tex">k= \sqrt{\frac{1}{ 2}(1-\frac{2QX}{U_a^2})}
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:0.6944em;"></span><span class="mord mathnormal"
+                  style="margin-right:0.03148em;">k</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:3.04em;vertical-align:-1.1925em;"></span><span class="mord sqrt"><span
+                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8475em;"><span
+                          class="svg-align" style="top:-5em;"><span class="pstrut" style="height:5em;"></span><span
+                            class="mord" style="padding-left:1em;"><span class="mord"><span
+                                class="mopen nulldelimiter"></span><span class="mfrac"><span
+                                  class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                      style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut"
+                                          style="height:3em;"></span><span class="mord"><span
+                                            class="mord">2</span></span></span><span style="top:-3.23em;"><span
+                                          class="pstrut" style="height:3em;"></span><span class="frac-line"
+                                          style="border-bottom-width:0.04em;"></span></span><span
+                                        style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span
+                                          class="mord"><span class="mord">1</span></span></span></span><span
+                                      class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                      style="height:0.686em;"><span></span></span></span></span></span><span
+                                class="mclose nulldelimiter"></span></span><span class="mopen">(</span><span
+                              class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span
+                              class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span
+                              class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span
+                                  class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                      style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut"
+                                          style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                              class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                              class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                                    class="vlist" style="height:0.7401em;"><span
+                                                      style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                                        class="pstrut" style="height:2.7em;"></span><span
+                                                        class="sizing reset-size6 size3 mtight"><span
+                                                          class="mord mathnormal mtight">a</span></span></span><span
+                                                      style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                                        style="height:2.7em;"></span><span
+                                                        class="sizing reset-size6 size3 mtight"><span
+                                                          class="mord mtight">2</span></span></span></span><span
+                                                    class="vlist-s">​</span></span><span class="vlist-r"><span
+                                                    class="vlist"
+                                                    style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span
+                                        style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span
+                                          class="frac-line" style="border-bottom-width:0.04em;"></span></span><span
+                                        style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span
+                                          class="mord"><span class="mord">2</span><span class="mord mathnormal"
+                                            style="margin-right:0.07847em;">QX</span></span></span></span><span
+                                      class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                      style="height:0.933em;"><span></span></span></span></span></span><span
+                                class="mclose nulldelimiter"></span></span><span
+                              class="mclose">)</span></span></span><span style="top:-3.8075em;"><span class="pstrut"
+                            style="height:5em;"></span><span class="hide-tail"
+                            style="min-width:1.02em;height:3.08em;"><svg xmlns="http://www.w3.org/2000/svg"
+                              width="400em" height="3.08em" viewBox="0 0 400000 3240"
+                              preserveAspectRatio="xMinYMin slice">
+                              <path d="M473,2793
+c339.3,-1799.3,509.3,-2700,510,-2702 l0 -0
+c3.3,-7.3,9.3,-11,18,-11 H400000v40H1017.7
+s-90.5,478,-276.2,1466c-185.7,988,-279.5,1483,-281.5,1485c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2c0,-1.3,-5.3,-32,-16,-92c-50.7,-293.3,-119.7,-693.3,-207,-1200
+c0,-1.3,-5.3,8.7,-16,30c-10.7,21.3,-21.3,42.7,-32,64s-16,33,-16,33s-26,-26,-26,-26
+s76,-153,76,-153s77,-151,77,-151c0.7,0.7,35.7,202,105,604c67.3,400.7,102,602.7,104,
+606zM1001 80h400000v40H1017.7z" />
+                            </svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span
+                        class="vlist"
+                        style="height:1.1925em;"><span></span></span></span></span></span></span></span></span></span>
+      </p>
+      <p>通过一系列变换（这里省略），可以通过下面两个式子得到<span class="katex"><span class="katex-mathml"><math
+              xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>U</mi>
+                    <mi>a</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">U_a</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.1514em;"><span
+                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">a</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和<span
+          class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>U</mi>
+                    <mi>b</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">U_b</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">b</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>的临界值，如下：
+      </p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mfrac>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>a</mi>
+                        <mn>2</mn>
+                      </msubsup>
+                      <mi>X</mi>
+                    </mfrac>
+                    <mo>=</mo>
+                    <mn>2</mn>
+                    <mi>Q</mi>
+                    <mo>+</mo>
+                    <mn>2</mn>
+                    <msqrt>
+                      <mrow>
+                        <msup>
+                          <mi>P</mi>
+                          <mn>2</mn>
+                        </msup>
+                        <mo>+</mo>
+                        <msup>
+                          <mi>Q</mi>
+                          <mn>2</mn>
+                        </msup>
+                      </mrow>
+                    </msqrt>
+                  </mrow>
+                  <annotation encoding="application/x-tex">\frac{U_a^2}{X}=2Q+2\sqrt{P^2+Q^2}
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.07847em;">X</span></span></span><span style="top:-3.23em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.8141em;"><span
+                                          style="top:-2.453em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">a</span></span></span><span
+                                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.686em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span
+                  class="mord mathnormal">Q</span><span class="mspace" style="margin-right:0.2222em;"></span><span
+                  class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span
+                class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2333em;"></span><span
+                  class="mord">2</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:1.0067em;"><span class="svg-align"
+                          style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord"
+                            style="padding-left:1em;"><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.13889em;">P</span><span class="msupsub"><span
+                                  class="vlist-t"><span class="vlist-r"><span class="vlist"
+                                      style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span
+                                          class="pstrut" style="height:2.7em;"></span><span
+                                          class="sizing reset-size6 size3 mtight"><span
+                                            class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                              class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span
+                              class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span
+                                class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span
+                                    class="vlist-r"><span class="vlist" style="height:0.7401em;"><span
+                                        style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                          style="height:2.7em;"></span><span
+                                          class="sizing reset-size6 size3 mtight"><span
+                                            class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span
+                          style="top:-2.9667em;"><span class="pstrut" style="height:3.2em;"></span><span
+                            class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296"
+                              preserveAspectRatio="xMinYMin slice">
+                              <path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z" />
+                            </svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span
+                        class="vlist"
+                        style="height:0.2333em;"><span></span></span></span></span></span></span></span></span></span>
+      </p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <mfrac>
+                      <msubsup>
+                        <mi>U</mi>
+                        <mi>b</mi>
+                        <mn>2</mn>
+                      </msubsup>
+                      <mi>X</mi>
+                    </mfrac>
+                    <mo>=</mo>
+                    <msqrt>
+                      <mrow>
+                        <msup>
+                          <mi>P</mi>
+                          <mn>2</mn>
+                        </msup>
+                        <mo>+</mo>
+                        <msup>
+                          <mi>Q</mi>
+                          <mn>2</mn>
+                        </msup>
+                      </mrow>
+                    </msqrt>
+                  </mrow>
+                  <annotation encoding="application/x-tex">\frac{U_b^2}{X}=\sqrt{P^2+Q^2}
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span
+                    class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.07847em;">X</span></span></span><span style="top:-3.23em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span
+                                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span
+                                  class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span
+                                        class="vlist" style="height:0.8141em;"><span
+                                          style="top:-2.4169em;margin-left:-0.109em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mathnormal mtight">b</span></span></span><span
+                                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span
+                                              class="mord mtight">2</span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.2831em;"><span></span></span></span></span></span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.686em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:1.24em;vertical-align:-0.2333em;"></span><span class="mord sqrt"><span
+                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0067em;"><span
+                          class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span
+                            class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal"
+                                style="margin-right:0.13889em;">P</span><span class="msupsub"><span
+                                  class="vlist-t"><span class="vlist-r"><span class="vlist"
+                                      style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span
+                                          class="pstrut" style="height:2.7em;"></span><span
+                                          class="sizing reset-size6 size3 mtight"><span
+                                            class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                              class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span
+                              class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span
+                                class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span
+                                    class="vlist-r"><span class="vlist" style="height:0.7401em;"><span
+                                        style="top:-2.989em;margin-right:0.05em;"><span class="pstrut"
+                                          style="height:2.7em;"></span><span
+                                          class="sizing reset-size6 size3 mtight"><span
+                                            class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span
+                          style="top:-2.9667em;"><span class="pstrut" style="height:3.2em;"></span><span
+                            class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296"
+                              preserveAspectRatio="xMinYMin slice">
+                              <path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z" />
+                            </svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span
+                        class="vlist"
+                        style="height:0.2333em;"><span></span></span></span></span></span></span></span></span></span>
+      </p>
+      <p>假设我们把<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>U</mi>
+                    <mi>a</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">U_a</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.1514em;"><span
+                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">a</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>当成输电网电压，<span
+          class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>U</mi>
+                    <mi>b</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">U_b</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.10903em;">U</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                          style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">b</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>当成配电网电压，显然可以通过方式计算得到等值电抗，再根据实际SCADA采集的电压值，实时计算电压稳定裕度。另外，我们通常说的短路容量，指的是与电压实时值无关，只与方式有关的静态值。而与电压稳定相关的容量值<span
+          class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msubsup>
+                    <mi>U</mi>
+                    <mi>b</mi>
+                    <mn>2</mn>
+                  </msubsup>
+                  <mi mathvariant="normal">/</mi>
+                  <mi>X</mi>
+                </mrow>
+                <annotation encoding="application/x-tex">U_b^2/X</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:1.0972em;vertical-align:-0.2831em;"></span><span class="mord"><span
+                  class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="msupsub"><span
+                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span
+                          style="top:-2.4169em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">b</span></span></span><span
+                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mtight">2</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.2831em;"><span></span></span></span></span></span></span><span
+                class="mord">/</span><span class="mord mathnormal"
+                style="margin-right:0.07847em;">X</span></span></span></span>，可以理解为“动态短路容量”。因此，电压稳定裕度也可以用动态短路比来表达，进一步的讨论就不再展开，很多复杂的电力系统电压稳定问题都可以用极简模型来说明原理。
       </p>
       <h2 id="7-潮流计算的工业应用">7 潮流计算的工业应用</h2>
       <p>首先是潮流的应用场景，如下图所示：</p>
