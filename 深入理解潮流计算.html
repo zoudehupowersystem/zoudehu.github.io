@@ -2980,7 +2980,7 @@
       <h3 id="22-pv节点">2.2 PV节点</h3>
       <p>在常规的商业用电力系统计算软件中，可选择将某台发电机设置为PV节点，然后程序内部将发电机连接的节点设置为PV节点。PV节点在此处体现的是发电机励磁系统控制机端电压的能力。</p>
       <p>
-        发电机励磁系统是十分复杂的，与稳定性也极其相关，但在潮流计算里面可暂不考虑。励磁控制的首要目标是控制电压在给定值，其稳态增益常常超过100p.u.。由于发电机总是与升压变压器构成一个整体（又叫发变组）。其控制目标常常是变压器高压侧，这就是所谓的“PV控高端”，而不是直接控制发电机出口。控高端的做法也是最近十几年才广泛应用的，其实现十分简单，就是输入的机端电压测量信号扣除在变压器电抗上的压降，该压降可以用电流和电抗参数算出来，也可以有别的方式（注意一般并不是直接测量高压侧电压）。为了使无功功率可以在并列发电机之间稳定分配，此种补偿必须形成调差特性，也就是说，不是正好100%的补偿，否则发电机无功分配会不稳定。在我国，迫使发电机实际电压比参考电压低时，称为正调差；反之则为负调差，负调差主要是抵消变压器压降，但不能超过变压器压降，负调差有助于发挥发电机对于系统的无功支撑作用。这里所说的调差只在机端，反映到高压侧，仍然是正调差的。
+        励磁控制的首要目标是控制电压在给定值，其稳态增益常常超过100p.u.。由于发电机总是与升压变压器构成一个整体（又叫发变组）。其控制目标常常是变压器高压侧，这就是所谓的“PV控高端”，而不是直接控制发电机出口。控高端的做法也是最近十几年才广泛应用的，其实现十分简单，就是输入的机端电压测量信号扣除在变压器电抗上的压降，该压降可以用电流和电抗参数算出来，也可以有别的方式（注意一般并不是直接测量高压侧电压）。为了使无功功率可以在并列发电机之间稳定分配，此种补偿必须形成调差特性，也就是说，不是正好100%的补偿，否则发电机无功分配会不稳定。在我国，迫使发电机实际电压比参考电压低时，称为正调差；反之则为负调差，负调差主要是抵消变压器压降，但不能超过变压器压降，负调差有助于发挥发电机对于系统的无功支撑作用。这里所说的调差只在机端，反映到高压侧，仍然是正调差的。
       </p>
       <p>
         对于潮流计算来说，PV控高端不需要考虑这么多细节，只是PV移植到了高压侧。算完之后，还需要把多余的无功功率分配回发电机机端。但是，在同一个发电厂设置过多的PV节点确实可以使收敛性下降，这是因为潮流计算不可能精细到可以考虑调差特性。此时可以考虑减少PV节点数量。
@@ -2990,7 +2990,7 @@
       </p>
       <p>不是所有的发电机励磁都运行在控电压的状态，对于地方上的小型发电机，更多的是跟随系统。系统对于小型发电机往往没有什么控制需求，此时发电机可能处于保证功率因数恒定运行，此时潮流计算可以把这类发电机设置为PQ节点。</p>
       <p>
-        对于地区电网来说，没有那么多的发电机，其主要电能都是从500kV电网输送过来的。连接500kV电网的主力发电机，由于建模范围的关系，没有在模型中。这时候可以认为500kV母线的电压保持恒定，把该母线定为PV节点。对于配电网来说，可把主网母线定为PV节点或平衡节点。另外，负荷节点如果有工作在恒电压模式的svc或者svg也可认为是PV节点
+        对于地区电网来说，没有那么多的发电机，其主要电能都是从500kV电网输送过来的。连接500kV电网的主力发电机，由于建模范围的关系，没有在模型中。这时候可以认为500kV母线的电压保持恒定，把该母线定为PV节点。对于配电网来说，可把主网母线定为PV节点或平衡节点。另外，负荷节点如果有工作在恒电压模式的SVC或者SVG也可认为是PV节点
         。</p>
       <h3 id="23-平衡节点">2.3 平衡节点</h3>
       <p>平衡节点有两层含义：其电压参考角度为0，其它母线电压角度都以该节点为参考。另外，该节点不给定注入功率，而是给定电压，起到电压支撑的作用（潮流计算可以不用设置PV节点）。这两层含义不是必然联系在一起的，不可混为一谈。</p>
@@ -2998,7 +2998,212 @@
         在商业用电力系统软件中，平衡节点往往设置为功率最大的发电机节点。由于该节点功率未给定，由系统算出来。但实际上该节点发电机是有明确的功率值的，这两者的差异，我们称为不平衡功率。为了更合理分析，发展了动态潮流计算方法，把不平衡功率引起系统频率变化，而系统频率变化又会引起负荷变化、发电机功率变化（一次调频），然后不平衡功率值又会发生变化。这是一个动态过程。
       </p>
       <p>使用状态估计数据时，不平衡功率往往很小。但是人工设置断面，或进行故障模拟，不平衡功率往往变得很大。因此，要想使潮流计算贴近实际，尤其是提高仿真精度，动态潮流技术是必然要采用的。</p>
-      <p>下面是一个思考题：已知某发电机的参数和运行情况，如果要求发电机输出的无功增加某个数值，那么励磁参考电压应怎么设置？下面分别从设备的角度和系统的角度，联合讲解发电机稳态调压的细节。</p>
+      <h3 id="24-考虑发电机调节">2.4 考虑发电机调节</h3>
+      <p>下面再稍微展开一下与同步发电机相关的问题。</p>
+      <p>发电机励磁系统是十分复杂的，与稳定性也极其相关，但在潮流计算里面可暂不考虑。下面我用简单的发电机动态模型说明为什么负荷无功减少，会引起系统电压的抬升。考虑下面的同步发电机三阶模型：</p>
+      <p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math
+                xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                <semantics>
+                  <mrow>
+                    <msubsup>
+                      <mi>T</mi>
+                      <mrow>
+                        <mi>d</mi>
+                        <mn>0</mn>
+                      </mrow>
+                      <mo mathvariant="normal" lspace="0em" rspace="0em">′</mo>
+                    </msubsup>
+                    <mfrac>
+                      <mrow>
+                        <mi>d</mi>
+                        <msubsup>
+                          <mi>E</mi>
+                          <mi>q</mi>
+                          <mo mathvariant="normal" lspace="0em" rspace="0em">′</mo>
+                        </msubsup>
+                      </mrow>
+                      <mrow>
+                        <mi>d</mi>
+                        <mi>t</mi>
+                      </mrow>
+                    </mfrac>
+                    <mo>=</mo>
+                    <msub>
+                      <mi>E</mi>
+                      <mrow>
+                        <mi>f</mi>
+                        <mi>d</mi>
+                      </mrow>
+                    </msub>
+                    <mo>−</mo>
+                    <msubsup>
+                      <mi>E</mi>
+                      <mi>q</mi>
+                      <mo mathvariant="normal" lspace="0em" rspace="0em">′</mo>
+                    </msubsup>
+                    <mo>−</mo>
+                    <mo stretchy="false">(</mo>
+                    <msub>
+                      <mi>x</mi>
+                      <mi>d</mi>
+                    </msub>
+                    <mo>−</mo>
+                    <msubsup>
+                      <mi>x</mi>
+                      <mi>d</mi>
+                      <mo mathvariant="normal" lspace="0em" rspace="0em">′</mo>
+                    </msubsup>
+                    <mo stretchy="false">)</mo>
+                    <msub>
+                      <mi>I</mi>
+                      <mi>d</mi>
+                    </msub>
+                  </mrow>
+                  <annotation encoding="application/x-tex">T&#x27;_{d0}\frac{dE&#x27;_q}{dt} =
+                    E_{fd}-E&#x27;_q-(x_d-x&#x27;_d)I_d
+                  </annotation>
+                </semantics>
+              </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                  style="height:2.211em;vertical-align:-0.686em;"></span><span class="mord"><span
+                    class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span
+                      class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span
+                            style="top:-2.453em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight"><span class="mord mathnormal mtight">d</span><span
+                                  class="mord mtight">0</span></span></span></span><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.247em;"><span></span></span></span></span></span></span><span
+                  class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span
+                      class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.525em;"><span
+                            style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span
+                              class="mord"><span class="mord mathnormal">d</span><span
+                                class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="frac-line"
+                              style="border-bottom-width:0.04em;"></span></span><span style="top:-3.7731em;"><span
+                              class="pstrut" style="height:3em;"></span><span class="mord"><span
+                                class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal"
+                                  style="margin-right:0.05764em;">E</span><span class="msupsub"><span
+                                    class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist"
+                                        style="height:0.7519em;"><span
+                                          style="top:-2.453em;margin-left:-0.0576em;margin-right:0.05em;"><span
+                                            class="pstrut" style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight"
+                                              style="margin-right:0.03588em;">q</span></span></span><span
+                                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                                            style="height:2.7em;"></span><span
+                                            class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span
+                                                class="mord mtight">′</span></span></span></span></span><span
+                                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                                        style="height:0.3831em;"><span></span></span></span></span></span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.686em;"><span></span></span></span></span></span><span
+                    class="mclose nulldelimiter"></span></span><span class="mspace"
+                  style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span
+                    class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span
+                      class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                            style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight"><span
+                                  class="mord mathnormal mtight">fd</span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace"
+                  style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:1.185em;vertical-align:-0.3831em;"></span><span class="mord"><span
+                    class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span
+                      class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span
+                            style="top:-2.453em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mathnormal mtight"
+                                style="margin-right:0.03588em;">q</span></span></span><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mspace"
+                  style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span
+                    class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                            style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mathnormal mtight">d</span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace"
+                  style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace"
+                  style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut"
+                  style="height:1.0519em;vertical-align:-0.25em;"></span><span class="mord"><span
+                    class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:0.8019em;"><span
+                            style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mathnormal mtight">d</span></span></span><span
+                            style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.247em;"><span></span></span></span></span></span></span><span
+                  class="mclose">)</span><span class="mord"><span class="mord mathnormal"
+                    style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                        class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                            style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut"
+                              style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                                class="mord mathnormal mtight">d</span></span></span></span><span
+                          class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                          style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>
+      </p>
+      <p>负荷无功减少，则<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msub>
+                    <mi>I</mi>
+                    <mi>d</mi>
+                  </msub>
+                </mrow>
+                <annotation encoding="application/x-tex">I_d</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.3361em;"><span
+                          style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight">d</span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>减小，这一点很容易从向量图画出来。假设发电机励磁不控制，则暂态电势<span
+          class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
+              <semantics>
+                <mrow>
+                  <msubsup>
+                    <mi>E</mi>
+                    <mi>q</mi>
+                    <mo mathvariant="normal" lspace="0em" rspace="0em">′</mo>
+                  </msubsup>
+                </mrow>
+                <annotation encoding="application/x-tex">E&#x27;_q</annotation>
+              </semantics>
+            </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
+                style="height:1.135em;vertical-align:-0.3831em;"></span><span class="mord"><span class="mord mathnormal"
+                  style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span
+                      class="vlist-r"><span class="vlist" style="height:0.7519em;"><span
+                          style="top:-2.453em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span></span></span><span
+                          style="top:-3.063em;margin-right:0.05em;"><span class="pstrut"
+                            style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
+                              class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span
+                        class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist"
+                        style="height:0.3831em;"><span></span></span></span></span></span></span></span></span></span>升高，附近节点的电压值抬升了。
+      </p>
+      <p>对于电网来说，假设电抗远远大于电阻，则电压降落主要与无功传输有关。假设负荷无功消耗下降，甚至倒送无功，则末端电压抬升。</p>
+      <p>从以上两点都可以说明（叠加），在不考虑励磁电压控制的情况下，全系统无功充裕，则系统电压高；反之则系统电压低。</p>
+      <p>再下面是一个思考题：已知某发电机的参数和运行情况，如果要求发电机输出的无功增加某个数值，那么励磁参考电压应怎么设置？下面分别从设备的角度和系统的角度，联合讲解发电机稳态调压的细节。</p>
       <p>
         现代发电机的励磁系统，其励磁电压参考值往往需要考虑主变的电抗，因此会增加一个修正值。这样，反映在主变高压侧，会形成调差特性。调差特性的存在，有助于发电机输出无功的分配；负调差还有助于电压调整效果。调差特性曲线可以近似用倾斜的直线来描述。
       </p>
@@ -4280,9 +4485,11 @@ dS_dVa = <span class="hljs-number">1</span><span class="hljs-built_in">j</span> 
                       <mi>X</mi>
                       <mn>2</mn>
                     </msup>
+                    <mo>=</mo>
+                    <mn>0</mn>
                   </mrow>
                   <annotation encoding="application/x-tex"> k^4 + k^2 (2\frac{Q X}{ U_a^2}-1) + \frac{P^2+Q^2}{ U_a^4}
-                    X^2
+                    X^2 = 0
                   </annotation>
                 </semantics>
               </math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut"
@@ -4371,8 +4578,10 @@ dS_dVa = <span class="hljs-number">1</span><span class="hljs-built_in">j</span> 
                         class="vlist-r"><span class="vlist" style="height:0.8641em;"><span
                             style="top:-3.113em;margin-right:0.05em;"><span class="pstrut"
                               style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span
-                                class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>
-      </p>
+                                class="mord mtight">2</span></span></span></span></span></span></span></span><span
+                  class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace"
+                  style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut"
+                  style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span></p>
       <p>把<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML">
               <semantics>
                 <mrow>
