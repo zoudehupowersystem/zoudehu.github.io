@@ -1,0 +1,140 @@
+name: Add article update dates once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-article-dates-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  add-dates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add visible update dates and structured metadata
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Dates for the legacy blog articles come from the modification
+          # timestamps of the corresponding Markdown files in the author's
+          # 2026 revised WeChat article archive. Newer articles use the date
+          # of the source supplied/published in this site update.
+          dates = {
+              'C++优化技术.md': '2026-03-26',
+              '从物理学出发理解电力系统.md': '2026-03-26',
+              '从音乐到电力系统一次调频.md': '2026-03-26',
+              '分布式计算机系统.md': '2026-03-25',
+              '工业系统演化与设计.md': '2026-03-25',
+              '深入理解对称分量法.md': '2026-03-26',
+              '深入理解潮流计算.md': '2026-03-26',
+              '电力系统中的编程语言.md': '2026-03-26',
+              '电力系统二次设备科普.md': '2026-03-25',
+              '电力系统仿真会议参会记录.md': '2026-03-25',
+              '电力系统控制的思考.md': '2026-03-25',
+              '电力系统近似常数与近似公式.md': '2026-03-26',
+              '电力通信科普.md': '2026-03-25',
+              '电网调度技术思考.md': '2026-03-26',
+              '短路与短路比.md': '2026-03-25',
+              '职业生涯回顾与思考.md': '2026-03-25',
+              '计算机中的基础数学函数.md': '2026-03-25',
+              '计算机系统之旅.md': '2026-03-25',
+              '论电力安全生产.md': '2026-03-25',
+              '论电力数字化转型.md': '2026-03-25',
+              '论电力系统仿真.md': '2026-03-25',
+              '论系统工程.md': '2026-03-25',
+              '谈谈汇编语言.md': '2026-03-25',
+              '谈谈电力系统嵌入式装置.md': '2026-03-25',
+              '谈谈电力系统状态估计.md': '2026-03-25',
+              '重温牛顿-拉夫逊法.md': '2026-03-26',
+              '矩阵思维下的潮流计算.md': '2026-09-07',
+              '曼尼托巴水电局的创业史.md': '2026-09-07',
+              'manitoba-hydro-pscad-rtds-history.md': '2026-09-07',
+          }
+
+          def set_front_matter(text, date):
+              m = re.match(r'\A---\s*\n(.*?)\n---\s*\n(.*)\Z', text, flags=re.S)
+              if not m:
+                  return text
+              fm, body = m.group(1), m.group(2)
+              if re.search(r'^updated:\s*', fm, flags=re.M):
+                  fm = re.sub(r'^updated:\s*.*$', f'updated: "{date}"', fm, flags=re.M)
+              else:
+                  fm += f'\nupdated: "{date}"'
+              return '---\n' + fm + '\n---\n\n' + body.lstrip('\n')
+
+          def add_meta(text, date, english=False):
+              # Remove a previously generated meta bar, if any.
+              text = re.sub(r'\n?<div class="article-meta"[^>]*>.*?</div>\s*', '\n', text,
+                            count=1, flags=re.S)
+
+              # Remove the old standalone author line and any old standalone
+              # revision/update line near the top of the article. This avoids
+              # showing two conflicting dates (some older drafts had a 2024 line).
+              h = re.search(r'^#\s+.+$', text, flags=re.M)
+              if not h:
+                  raise RuntimeError('No H1 found')
+              prefix = text[:h.end()]
+              tail = text[h.end():]
+              head = tail[:1200]
+              rest = tail[1200:]
+              head = re.sub(r'^\s*\*\*作者：邹德虎\*\*\s*\n?', '', head, flags=re.M)
+              head = re.sub(r'^\s*\*\*Author:\s*Dehu Zou\*\*\s*\n?', '', head, flags=re.M | re.I)
+              head = re.sub(r'^\s*\*\*(?:20\d{2}[-年][^\n]*(?:修订|整理|更新)[^\n]*)\*\*\s*\n?', '', head, flags=re.M)
+              tail = head + rest
+
+              if english:
+                  meta = (f'\n\n<div class="article-meta" style="margin:-4px 0 24px;color:#667085;'
+                          f'font-size:.9rem;display:flex;gap:8px 18px;flex-wrap:wrap;">'
+                          f'<span>Author: Dehu Zou</span><span>Updated: {date}</span></div>\n')
+              else:
+                  meta = (f'\n\n<div class="article-meta" style="margin:-4px 0 24px;color:#667085;'
+                          f'font-size:.9rem;display:flex;gap:8px 18px;flex-wrap:wrap;">'
+                          f'<span>作者：邹德虎</span><span>更新时间：{date}</span></div>\n')
+              return prefix + meta + tail.lstrip('\n')
+
+          for fname, date in dates.items():
+              p = Path(fname)
+              if not p.exists():
+                  raise RuntimeError(f'Missing article: {fname}')
+              text = p.read_text(encoding='utf-8')
+              text = set_front_matter(text, date)
+              english = fname == 'manitoba-hydro-pscad-rtds-history.md'
+              if english:
+                  text = text.replace(
+                      '<div class="adapt-note">Author: Dehu Zou · English edition adapted for international readers; China-specific scale comparisons and reader-addressed passages have been reframed while preserving the technical history and source base.</div>',
+                      '<div class="adapt-note">English edition adapted for international readers; China-specific scale comparisons and reader-addressed passages have been reframed while preserving the technical history and source base.</div>',
+                      1,
+                  )
+              text = add_meta(text, date, english=english)
+              p.write_text(text, encoding='utf-8')
+
+          # Add dateModified to both BlogPosting layouts. Liquid emits the
+          # field only when the article has an updated value.
+          for layout in [Path('_layouts/article.html'), Path('_layouts/manitoba.html')]:
+              s = layout.read_text(encoding='utf-8')
+              if '"dateModified"' not in s:
+                  needle = '    "description": {{ seo_description | jsonify }},\n'
+                  repl = needle + '    {% if page.updated %}"dateModified": {{ page.updated | jsonify }},{% endif %}\n'
+                  if needle not in s:
+                      raise RuntimeError(f'BlogPosting description block not found in {layout}')
+                  s = s.replace(needle, repl, 1)
+                  layout.write_text(s, encoding='utf-8')
+          PY
+
+          rm -f '.github/workflows/add-article-dates-once.yml'
+
+      - name: Commit article dates
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add update dates to all blog articles'
+          git push
