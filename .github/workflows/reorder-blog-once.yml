@@ -1,0 +1,75 @@
+name: Reorder blog list once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/reorder-blog-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-blog-list:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reorder article links and remove obsolete AI article
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          start_marker = '            <div class="articles-grid" role="list">\n'
+          end_marker = '            </div>\n          </div>\n        </div>\n\n        <!-- EDUCATION -->'
+          start = s.index(start_marker) + len(start_marker)
+          end = s.index(end_marker, start)
+          links = [
+              ('职业生涯回顾与思考.html', '职业生涯回顾与思考', 'READ'),
+              ('曼尼托巴水电局的创业史.html', '曼尼托巴系列（中文）：曼尼托巴水电局的创业史', '中文'),
+              ('manitoba-hydro-pscad-rtds-history.html', 'Manitoba Series (English): From the Nelson River to PSCAD and RTDS', 'EN'),
+              ('从物理学出发理解电力系统.html', '从物理学出发理解电力系统', 'READ'),
+              ('深入理解潮流计算.html', '深入理解潮流计算', 'READ'),
+              ('深入理解对称分量法.html', '深入理解对称分量法', 'READ'),
+              ('电力系统近似常数与近似公式.html', '电力系统近似常数与近似公式', 'READ'),
+              ('短路与短路比.html', '短路与短路比', 'READ'),
+              ('谈谈电力系统状态估计.html', '谈谈电力系统状态估计', 'READ'),
+              ('电网调度技术思考.html', '电网调度技术思考', 'READ'),
+              ('从音乐到电力系统一次调频.html', '从音乐到电力系统一次调频', 'READ'),
+              ('电力系统控制的思考.html', '电力系统控制的思考', 'READ'),
+              ('论电力系统仿真.html', '论电力系统仿真', 'READ'),
+              ('电力系统仿真会议参会记录.html', '电力系统仿真会议参会记录', 'READ'),
+              ('谈谈电力系统嵌入式装置.html', '谈谈电力系统嵌入式装置', 'READ'),
+              ('论电力安全生产.html', '论电力安全生产', 'READ'),
+              ('论电力数字化转型.html', '论电力数字化转型', 'READ'),
+              ('电力系统中的编程语言.html', '电力系统中的编程语言', 'READ'),
+              ('电力通信科普.html', '电力通信科普', 'READ'),
+              ('电力系统二次设备科普.html', '电力系统二次设备科普', 'READ'),
+              ('工业系统演化与设计.html', '工业系统演化与设计', 'READ'),
+              ('分布式计算机系统.html', '分布式计算机系统', 'READ'),
+              ('计算机中的基础数学函数.html', '计算机中的基础数学函数', 'READ'),
+              ('论系统工程.html', '论系统工程', 'READ'),
+              ('C++优化技术.html', 'C++优化技术', 'READ'),
+              ('计算机系统之旅.html', '计算机系统之旅', 'READ'),
+          ]
+          inner = ''.join(
+              f'              <a class="article-item" role="listitem" href="{href}">\n'
+              f'                <span>{title}</span><small>{tag}</small>\n'
+              f'              </a>\n'
+              for href, title, tag in links
+          )
+          p.write_text(s[:start] + inner + s[end:], encoding='utf-8')
+          PY
+          rm -f 'AI与电力系统.html'
+          rm -f '.github/workflows/reorder-blog-once.yml'
+
+      - name: Commit changes
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Reorder blog articles and remove outdated AI article'
+          git push
