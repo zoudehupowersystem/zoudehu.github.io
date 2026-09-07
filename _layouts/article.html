@@ -21,6 +21,7 @@
     "@type": "BlogPosting",
     "headline": {{ page.title | jsonify }},
     "description": {{ seo_description | jsonify }},
+    {% if page.updated %}"dateModified": {{ page.updated | jsonify }},{% endif %}
     "url": {{ 'https://zoudehupowersystem.github.io/zoudehu.github.io' | append: page.url | jsonify }},
     "mainEntityOfPage": {
       "@type": "WebPage",

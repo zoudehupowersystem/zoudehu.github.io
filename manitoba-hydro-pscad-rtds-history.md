@@ -4,6 +4,7 @@ title: "From the Nelson River to PSCAD and RTDS: Manitoba’s Power-System Simul
 lang: en
 seo_title: "History of PSCAD and RTDS: Manitoba Hydro, EMTDC and Real-Time Simulation | Dehu Zou"
 description: "A technical history of Manitoba Hydro, Dennis Woodford, EMTDC/PSCAD, the Manitoba HVDC Research Centre, RTDS Technologies, the University of Manitoba, real-time EMT simulation, and the commercialization path from utility engineering problems to global simulation products."
+updated: "2026-09-07"
 ---
 
 <!-- BLOG-TOPIC-START -->
@@ -25,10 +26,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 
 <div class="article-nav"><a href="曼尼托巴水电局的创业史.html">中文版 →</a></div>
 
-<div class="adapt-note">Author: Dehu Zou · English edition adapted for international readers; China-specific scale comparisons and reader-addressed passages have been reframed while preserving the technical history and source base.</div>
+<div class="adapt-note">English edition adapted for international readers; China-specific scale comparisons and reader-addressed passages have been reframed while preserving the technical history and source base.</div>
 
 # From the Nelson River to PSCAD and RTDS: Manitoba’s Power-System Simulation Story
 
+<div class="article-meta" style="margin:-4px 0 24px;color:#667085;font-size:.9rem;display:flex;gap:8px 18px;flex-wrap:wrap;"><span>Author: Dehu Zou</span><span>Updated: 2026-09-07</span></div>
 > How did a modest-sized electric utility in the middle of Canada help give rise to two world-class power-system simulation platforms? The story did not begin with a grand entrepreneurship plan. It began with a sequence of engineering problems that could not be avoided.
 
 The development of PSCAD and the RTDS Simulator around Manitoba Hydro is a rare end-to-end example in the power industry: **internal engineering problems drove joint research; research was tested against real systems; prototypes became products; and products eventually reached a global market**. The history is therefore useful not only as a technology story, but also as a case study in industrial innovation and R&D management.

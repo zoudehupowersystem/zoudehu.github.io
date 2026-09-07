@@ -4,12 +4,12 @@ title: "C++优化技术"
 permalink: "/C++优化技术.html"
 seo_title: "C++优化技术：缓存、并行与高性能工程实践｜邹德虎 Dehu Zou"
 description: "本文主要讨论C++高性能编程（属于极致性能需求），以及提高编程质量的经验。按照本人的粗浅认识，应该已经覆盖了绝大多数技术要点，但缺点是不够详细。"
+updated: "2026-03-26"
 ---
 
 # C++优化技术
 
-**作者：邹德虎**
-
+<div class="article-meta" style="margin:-4px 0 24px;color:#667085;font-size:.9rem;display:flex;gap:8px 18px;flex-wrap:wrap;"><span>作者：邹德虎</span><span>更新时间：2026-03-26</span></div>
 本文主要讨论C++高性能编程（属于极致性能需求），以及提高编程质量的经验。按照本人的粗浅认识，应该已经覆盖了绝大多数技术要点，但缺点是不够详细。
 
 ## 1 总体论述
