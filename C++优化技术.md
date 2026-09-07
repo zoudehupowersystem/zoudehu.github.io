@@ -4,7 +4,6 @@ title: "C++优化技术"
 permalink: "/C++优化技术.html"
 ---
 
-BLOG-TOPIC-START BLOG-TOPIC-END
 
 # C++优化技术
 
