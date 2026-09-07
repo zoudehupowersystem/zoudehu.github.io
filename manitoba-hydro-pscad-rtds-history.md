@@ -1,7 +1,10 @@
 ---
+layout: manitoba
 title: "From the Nelson River to PSCAD and RTDS: Manitoba’s Power-System Simulation Story"
+lang: en
+seo_title: "History of PSCAD and RTDS: Manitoba Hydro, EMTDC and Real-Time Simulation | Dehu Zou"
+description: "A technical history of Manitoba Hydro, Dennis Woodford, EMTDC/PSCAD, the Manitoba HVDC Research Centre, RTDS Technologies, the University of Manitoba, real-time EMT simulation, and the commercialization path from utility engineering problems to global simulation products."
 ---
-
 
 <!-- BLOG-TOPIC-START -->
 <div class="zdh-blog-topic" style="max-width:980px;margin:18px auto 28px;padding:14px 16px;border:1px solid rgba(91,181,255,.35);border-radius:14px;background:linear-gradient(135deg,#0b1f3a,#102f52);box-shadow:0 8px 24px rgba(11,31,58,.14);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','PingFang SC','Microsoft YaHei',sans-serif;color:#fff;">
