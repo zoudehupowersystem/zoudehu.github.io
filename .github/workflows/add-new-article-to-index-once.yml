@@ -1,0 +1,58 @@
+name: Add new article to blog list once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-new-article-to-index-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Insert article links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          powerflow = '''              <a class="article-item" role="listitem" href="深入理解潮流计算.html">\n                <span>深入理解潮流计算</span><small>READ</small>\n              </a>\n'''
+          matrix = '''              <a class="article-item" role="listitem" href="矩阵思维下的潮流计算.html">\n                <span>矩阵思维下的潮流计算</span><small>NEW</small>\n              </a>\n'''
+          if 'href="矩阵思维下的潮流计算.html"' not in s:
+              if powerflow not in s:
+                  raise RuntimeError('Could not locate 深入理解潮流计算 entry')
+              s = s.replace(powerflow, powerflow + matrix, 1)
+
+          computer = '''              <a class="article-item" role="listitem" href="计算机系统之旅.html">\n                <span>计算机系统之旅</span><small>READ</small>\n              </a>\n'''
+          assembly = '''              <a class="article-item" role="listitem" href="谈谈汇编语言.html">\n                <span>谈谈汇编语言</span><small>READ</small>\n              </a>\n'''
+          newton = '''              <a class="article-item" role="listitem" href="重温牛顿-拉夫逊法.html">\n                <span>重温牛顿-拉夫逊法</span><small>READ</small>\n              </a>\n'''
+          if 'href="谈谈汇编语言.html"' not in s or 'href="重温牛顿-拉夫逊法.html"' not in s:
+              if computer not in s:
+                  raise RuntimeError('Could not locate 计算机系统之旅 entry')
+              tail = ''
+              if 'href="谈谈汇编语言.html"' not in s:
+                  tail += assembly
+              if 'href="重温牛顿-拉夫逊法.html"' not in s:
+                  tail += newton
+              s = s.replace(computer, computer + tail, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+          rm -f '.github/workflows/add-new-article-to-index-once.yml'
+
+      - name: Commit changes
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Update blog list with matrix power flow and hidden articles'
+          git push
