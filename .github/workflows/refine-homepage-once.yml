@@ -1,0 +1,299 @@
+name: Refine homepage once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refine-homepage-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refine homepage layout and remove redundant copy
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # --- Visual refinement: keep the existing dark engineering aesthetic, but improve hierarchy. ---
+          extra_css = r'''
+    /* 2026 homepage refinement */
+    .hero { padding: 34px 32px 28px; }
+    .hero-grid { grid-template-columns: 172px 1fr; gap: 30px; }
+    .avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 22px;
+      border-color: rgba(155, 231, 255, 0.22);
+      box-shadow: 0 18px 48px rgba(0,0,0,.34), 0 0 0 1px rgba(91,181,255,.06);
+    }
+    .hero-eyebrow {
+      margin-bottom: 9px;
+      color: rgba(155, 231, 255, .76);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .name h1 { font-size: 38px; letter-spacing: .2px; }
+    .name .en-name {
+      font-size: .56em;
+      font-weight: 500;
+      color: rgba(255,255,255,.64);
+      letter-spacing: .2px;
+    }
+    .name .title {
+      border-color: rgba(91,181,255,.22);
+      background: rgba(91,181,255,.07);
+      color: rgba(225,241,255,.80);
+    }
+    .subtitle {
+      margin-top: 13px;
+      max-width: 68ch;
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: rgba(255,255,255,.72);
+    }
+    .focus-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+    .focus-tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .quick-actions { margin-top: 16px; }
+    .btn { box-shadow: none; }
+    .btn.primary {
+      border-color: rgba(91,181,255,.40);
+      background: linear-gradient(180deg, rgba(91,181,255,.18), rgba(91,181,255,.10));
+      color: #eaf7ff;
+    }
+    .kpi {
+      padding: 20px 24px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,0));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .tagline {
+      padding: 13px 15px;
+      border-color: rgba(231,201,122,.16);
+      background: linear-gradient(90deg, rgba(231,201,122,.075), rgba(91,181,255,.045));
+      color: rgba(255,255,255,.78);
+    }
+    .kpi-card {
+      position: relative;
+      overflow: hidden;
+      padding: 16px 15px 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.032));
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .kpi-card:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(91,181,255,.78), rgba(155,231,255,.18), transparent);
+    }
+    .kpi-card:hover { transform: translateY(-2px); border-color: rgba(91,181,255,.24); }
+    .kpi-card .num { font-size: 25px; letter-spacing: -.3px; }
+    .main { padding: 26px 24px 12px; }
+    .section { margin-bottom: 30px; scroll-margin-top: 22px; }
+    .section h2 { margin-bottom: 13px; font-size: 20px; letter-spacing: .15px; }
+    .section h2:before {
+      width: 4px;
+      height: 19px;
+      border-radius: 999px;
+      box-shadow: none;
+    }
+    .card { padding: 18px 18px 16px; border-radius: 15px; }
+    .article-item {
+      min-height: 48px;
+      padding: 11px 13px;
+      border-radius: 11px;
+      transition: transform .14s ease, border-color .14s ease, background .14s ease;
+    }
+    .article-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(91,181,255,.28);
+      background: rgba(91,181,255,.07);
+      text-decoration: none;
+    }
+    .article-item small { color: rgba(155,231,255,.48); }
+    .timeline .item {
+      border-left: 2px solid rgba(91,181,255,.36);
+      background: linear-gradient(90deg, rgba(91,181,255,.045), rgba(255,255,255,.018));
+      border-radius: 10px;
+      padding: 13px 14px 12px;
+    }
+    .timeline .item .when { color: rgba(155,231,255,.56); }
+    .timeline .item .what { line-height: 1.78; }
+    details.more {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    details.more summary {
+      cursor: pointer;
+      list-style: none;
+      color: rgba(155,231,255,.72);
+      font-size: 13px;
+      user-select: none;
+    }
+    details.more summary::-webkit-details-marker { display: none; }
+    details.more summary:after { content: "  +"; color: var(--faint); }
+    details.more[open] summary:after { content: "  −"; }
+    .more-list { margin-top: 12px; }
+    .contact-card { display: grid; gap: 2px; }
+    .contact-row {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      align-items: baseline;
+    }
+    .contact-row:last-child { border-bottom: 0; }
+    .contact-label {
+      color: var(--faint);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .contact-value { color: rgba(255,255,255,.78); font-size: 14px; overflow-wrap: anywhere; }
+    .service-list li { margin: 9px 0; }
+    .section-note {
+      margin: -5px 0 13px;
+      color: var(--faint);
+      font-size: 12.5px;
+      line-height: 1.65;
+    }
+    @media (max-width: 700px) {
+      .hero { padding: 24px 18px 21px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 18px; }
+      .avatar { width: 126px; height: 126px; border-radius: 18px; }
+      .name h1 { font-size: 31px; }
+      .kpi { padding: 17px 16px 20px; }
+      .main { padding: 22px 16px 10px; }
+      .contact-row { grid-template-columns: 68px 1fr; }
+    }
+'''
+          if '/* 2026 homepage refinement */' not in s:
+              s = s.replace('    /* Responsive */', extra_css + '\n    /* Responsive */', 1)
+
+          # --- Hero: shorter, stronger positioning and clearer navigation. ---
+          old_hero_content = '''          <div>\n            <div class="name">\n              <h1>邹德虎 <span style="font-size:.62em;font-weight:500;color:rgba(255,255,255,.72);letter-spacing:.2px;">Dehu Zou</span></h1>\n              <div class="title">电力系统研发架构师・技术总监</div>\n            </div>\n\n            <p class="subtitle">\n              高级工程师，长期从事电力系统研发与工程应用。研究与工程方向聚焦于：电力系统建模仿真、调度控制与自动化技术；面向电力行业研发“可工程化、可验证、可产品化”的系统级解决方案\n            </p>\n\n            <div class="quick-actions">\n              <a class="btn" href="#contact"><strong>联系</strong><span class="mono">Contact</span></a>\n              <a class="btn" href="#articles"><strong>文章</strong><span class="mono">Blog</span></a>\n              <a class="btn" href="#experience"><strong>履历</strong><span class="mono">CV</span></a>\n              <a class="btn" href="#patents"><strong>专利</strong><span class="mono">IP</span></a>\n              <a class="btn" href="#papers"><strong>论文</strong><span class="mono">Pubs</span></a>\n            </div>\n          </div>'''
+          new_hero_content = '''          <div>\n            <div class="hero-eyebrow">POWER SYSTEMS · REAL-TIME EMT · INDUSTRIAL SOFTWARE</div>\n            <div class="name">\n              <h1>邹德虎 <span class="en-name">Dehu Zou</span></h1>\n              <div class="title">电力系统研发架构师 · 技术总监</div>\n            </div>\n\n            <p class="subtitle">\n              高级工程师，长期从事电力系统建模仿真、实时电磁暂态（EMT）、调度自动化与工业软件研发。工作横跨电网现场、数值算法、实时计算、软件架构与产品化。\n            </p>\n\n            <div class="focus-tags" aria-label="专业方向">\n              <span class="focus-tag">实时 EMT 仿真</span>\n              <span class="focus-tag">电力系统建模与计算</span>\n              <span class="focus-tag">调度自动化</span>\n              <span class="focus-tag">高性能 C++</span>\n            </div>\n\n            <div class="quick-actions">\n              <a class="btn primary" href="#articles"><strong>文章</strong><span class="mono">Blog</span></a>\n              <a class="btn" href="#experience"><strong>履历</strong><span class="mono">Experience</span></a>\n              <a class="btn" href="#papers"><strong>代表成果</strong><span class="mono">Work</span></a>\n              <a class="btn" href="#contact"><strong>联系</strong><span class="mono">Contact</span></a>\n            </div>\n          </div>'''
+          if old_hero_content not in s:
+              raise RuntimeError('Hero block not found')
+          s = s.replace(old_hero_content, new_hero_content, 1)
+
+          s = s.replace(
+              '面向电网调度自动化与主动配电网仿真等复杂系统，兼具工程现场规模化落地经验与平台级研发能力',
+              '从电网调度现场到实时 EMT 平台：关注复杂系统的可计算、可验证与可产品化。',
+              1,
+          )
+
+          # --- Work history: fold the standalone 2017 commercial result into the R&D period. ---
+          old_rd = '''            <div class="item">\n              <div class="when">2013–2017</div>\n              <div class="what">工程师/高级工程师，国电南瑞科技股份有限公司（系统研发中心）：D5000 研究与开发；项目《面向城市骨干电网广域层次化自愈系统关键技术及应用》作为第2完成人，\n                经中国电机工程学会鉴定为“成果整体达到国际领先水平”。</div>\n            </div>\n            <div class="item">\n              <div class="when">2017（财务统计）</div>\n              <div class="what">据国电南瑞科技股份有限公司财务统计：本人主持研发的部分产品新增销售额 11104.15 万元，新增利润 3822 万元。</div>\n            </div>'''
+          new_rd = '''            <div class="item">\n              <div class="when">2013–2017</div>\n              <div class="what">工程师/高级工程师，国电南瑞科技股份有限公司（系统研发中心）：从事 D5000 研发；参与成果《面向城市骨干电网广域层次化自愈系统关键技术及应用》（第2完成人），经中国电机工程学会鉴定为“整体达到国际领先水平”。据公司 2017 年财务统计，本人主持研发的部分产品新增销售额 11104.15 万元、新增利润 3822 万元。</div>\n            </div>'''
+          if old_rd in s:
+              s = s.replace(old_rd, new_rd, 1)
+
+          s = s.replace(
+              '东南大学专职科研人员  江苏鲲游能源技术有限公司技术总监：主持研发国产自主可控电力系统实时电磁仿真平台 ADS-RTSim（工业级 C++，总代码量近 50\n                万行）；平台已产品化，并在江苏、浙江、贵州等多个电网工程应用。',
+              '东南大学专职科研人员；江苏鲲游能源技术有限公司技术总监。主持研发国产自主可控电力系统实时电磁仿真平台 ADS-RTSim（工业级 C++，代码规模 50 万+）；平台已产品化，并在江苏、浙江、贵州等多个电网工程应用。',
+              1,
+          )
+
+          # --- Utility to collapse long lists without deleting information. ---
+          def compact_section(text, start_marker, end_marker, keep, summary, new_heading=None, note=None):
+              a = text.index(start_marker)
+              b = text.index(end_marker, a)
+              block = text[a:b]
+              if new_heading:
+                  block = re.sub(r'<h2>.*?</h2>', f'<h2>{new_heading}</h2>', block, count=1, flags=re.S)
+              m = re.search(r'<ul class="list">(.*?)</ul>', block, flags=re.S)
+              if not m:
+                  raise RuntimeError(f'List not found in {start_marker}')
+              items = re.findall(r'\s*<li>.*?</li>', m.group(1), flags=re.S)
+              if len(items) <= keep:
+                  return text
+              visible = ''.join(items[:keep])
+              rest = ''.join(items[keep:])
+              replacement = '<ul class="list">' + visible + '\n            </ul>\n'
+              replacement += f'''            <details class="more">\n              <summary>{summary}</summary>\n              <ul class="list more-list">{rest}\n              </ul>\n            </details>'''
+              block = block[:m.start()] + replacement + block[m.end():]
+              if note:
+                  block = block.replace('</h2>', '</h2>\n          <div class="section-note">' + note + '</div>', 1)
+              return text[:a] + block + text[b:]
+
+          s = compact_section(
+              s, '<!-- AWARDS -->', '<!-- CONTACT & PUBLIC -->', 5,
+              '展开其余获奖与论文奖励',
+              new_heading='代表性获奖',
+              note='优先展示国家电网、南方电网及省级/集团级代表性科技与专利奖励。',
+          )
+
+          # --- Contact becomes contact-only; move credentials/service statements to Service. ---
+          contact_start = s.index('        <!-- CONTACT & PUBLIC -->')
+          contact_end = s.index('        <!-- SERVICE -->', contact_start)
+          new_contact = '''        <!-- CONTACT & PUBLIC -->\n        <div class="section" id="contact">\n          <h2>联系方式与公开资料</h2>\n          <div class="contact-grid">\n            <div class="card contact-card">\n              <div class="contact-row">\n                <div class="contact-label">Email</div>\n                <div class="contact-value"><a href="mailto:zoudehu@gmail.com">zoudehu@gmail.com</a></div>\n              </div>\n              <div class="contact-row">\n                <div class="contact-label">Email</div>\n                <div class="contact-value"><a href="mailto:zoupaper@163.com">zoupaper@163.com</a></div>\n              </div>\n              <div class="contact-row">\n                <div class="contact-label">ORCID</div>\n                <div class="contact-value"><a href="https://orcid.org/0000-0002-3359-0145" target="_blank" rel="me noopener noreferrer">0000-0002-3359-0145</a></div>\n              </div>\n              <div class="contact-row">\n                <div class="contact-label">GitHub</div>\n                <div class="contact-value"><a href="https://github.com/zoudehupowersystem" target="_blank" rel="me noopener noreferrer">github.com/zoudehupowersystem</a></div>\n              </div>\n            </div>\n\n            <div class="qr" aria-label="微信公众号二维码">\n              <div class="fine" style="margin-bottom: 10px;">微信公众号：深入理解电力系统</div>\n              <img src="weixin.jpg" alt="深入理解电力系统微信公众号二维码" />\n              <div class="fine" style="margin-top: 10px;">电力系统 · 工程技术 · 计算与仿真</div>\n            </div>\n          </div>\n        </div>\n\n'''
+          s = s[:contact_start] + new_contact + s[contact_end:]
+
+          # --- Service: retain non-contact credentials, without repeating KPI counts. ---
+          service_start = s.index('        <!-- SERVICE -->')
+          service_end = s.index('        <!-- PATENTS -->', service_start)
+          new_service = '''        <!-- SERVICE -->\n        <div class="section" id="service">\n          <h2>行业、学术与开源服务</h2>\n          <div class="card">\n            <ul class="list service-list">\n              <li>OPSEN 开源项目发起人与维护者（GitHub：zoudehupowersystem，2025–至今），围绕电力系统建模、仿真、分析与应用构建开源工具生态。</li>\n              <li>IEEE 2025 第三届电力科学与技术国际会议（ICPST 2025）T2 分会场主席（Session Chair）。</li>\n              <li>参与编写国家标准 GBT 40616-2021《村镇光伏发电站集群控制系统仿真测试技术要求》。</li>\n              <li>东南大学电子学院硕士研究生校外指导教师。</li>\n            </ul>\n          </div>\n        </div>\n\n'''
+          s = s[:service_start] + new_service + s[service_end:]
+
+          # --- Publications/IP: total counts live in KPI; below shows representative work, with the rest collapsible. ---
+          s = compact_section(
+              s, '<!-- PATENTS -->', '<!-- PAPERS -->', 6,
+              '展开其余代表性授权发明专利',
+              new_heading='代表性授权发明专利',
+              note='总授权数量见页面顶部；此处保留与状态估计、备自投、建模和实时仿真直接相关的代表性条目。',
+          )
+          s = compact_section(
+              s, '<!-- PAPERS -->', '      </div>\n\n      <div class="foot">', 5,
+              '展开其余代表性论文',
+              new_heading='代表性论文',
+              note='总发表数量见页面顶部；优先展示近年实时 EMT 研究及具有代表性的早期工作。',
+          )
+
+          # Footer wording: shorter and bilingual.
+          s = s.replace('© 邹德虎｜电力系统研发', '© 邹德虎 · Dehu Zou', 1)
+          s = s.replace('Built for clarity, verification, and credibility.', 'Power Systems · Real-Time Simulation · Engineering', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          rm -f '.github/workflows/refine-homepage-once.yml'
+
+      - name: Commit homepage refinement
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Refine homepage layout and reduce repeated content'
+          git push
