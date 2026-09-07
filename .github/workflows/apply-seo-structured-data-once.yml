@@ -1,0 +1,190 @@
+name: Apply SEO and structured data once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-seo-structured-data-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply homepage, article and Manitoba SEO metadata
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          ROOT_URL = 'https://zoudehupowersystem.github.io/zoudehu.github.io/'
+
+          # 1) Homepage: stronger search title + ProfilePage/Person structured data.
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = re.sub(
+              r'<title>.*?</title>',
+              '<title>邹德虎（Dehu Zou）｜电力系统仿真、调度自动化与工业软件研发</title>',
+              s,
+              count=1,
+              flags=re.S,
+          )
+          s = re.sub(
+              r'<meta name="description"\s*\n?\s*content=".*?"\s*/>',
+              '<meta name="description" content="邹德虎（Dehu Zou），高级工程师、电力系统研发架构师。长期从事电力系统建模仿真、实时电磁暂态仿真（EMT）、电网调度自动化与工业软件研发，ADS-RTSim 实时仿真平台负责人，OPSEN 开源项目发起人。" />',
+              s,
+              count=1,
+              flags=re.S,
+          )
+
+          profile_schema = '''
+  <link rel="canonical" href="https://zoudehupowersystem.github.io/zoudehu.github.io/" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="邹德虎（Dehu Zou）｜电力系统仿真、调度自动化与工业软件研发" />
+  <meta property="og:description" content="邹德虎（Dehu Zou），高级工程师、电力系统研发架构师。长期从事电力系统建模仿真、实时电磁暂态仿真（EMT）、电网调度自动化与工业软件研发。" />
+  <meta property="og:url" content="https://zoudehupowersystem.github.io/zoudehu.github.io/" />
+  <meta property="og:image" content="https://zoudehupowersystem.github.io/zoudehu.github.io/zoudehu.jpg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": "https://zoudehupowersystem.github.io/zoudehu.github.io/#profile",
+    "url": "https://zoudehupowersystem.github.io/zoudehu.github.io/",
+    "name": "邹德虎（Dehu Zou）个人主页",
+    "description": "邹德虎（Dehu Zou），高级工程师、电力系统研发架构师。长期从事电力系统建模仿真、实时电磁暂态仿真（EMT）、电网调度自动化与工业软件研发。",
+    "dateModified": "2026-09-07",
+    "mainEntity": {
+      "@type": "Person",
+      "@id": "https://zoudehupowersystem.github.io/zoudehu.github.io/#dehu-zou",
+      "name": "邹德虎",
+      "alternateName": "Dehu Zou",
+      "url": "https://zoudehupowersystem.github.io/zoudehu.github.io/",
+      "image": "https://zoudehupowersystem.github.io/zoudehu.github.io/zoudehu.jpg",
+      "jobTitle": "电力系统研发架构师、技术总监 / Power System R&D Architect and Technical Director",
+      "description": "高级工程师，长期从事电力系统建模仿真、实时电磁暂态仿真、电网调度自动化与工业软件研发。",
+      "knowsAbout": [
+        "Power systems",
+        "Electromagnetic transient simulation",
+        "Real-time EMT simulation",
+        "Power system modelling and simulation",
+        "Grid dispatch and automation",
+        "Industrial software engineering",
+        "High-performance C++"
+      ],
+      "sameAs": [
+        "https://github.com/zoudehupowersystem"
+      ]
+    }
+  }
+  </script>
+'''
+          if '#dehu-zou' not in s:
+              s = s.replace('  <meta name="theme-color" content="#0B1F3A" />',
+                            '  <meta name="theme-color" content="#0B1F3A" />\n' + profile_schema)
+          p.write_text(s, encoding='utf-8')
+
+          # 2) Unified article layout: unique title/description + BlogPosting author identity.
+          p = Path('_layouts/article.html')
+          s = p.read_text(encoding='utf-8')
+          old = '''  <title>{{ page.title }}｜邹德虎的博客</title>\n  <meta name="description" content="邹德虎的博客：电力系统、工程技术、计算与仿真。" />'''
+          new = '''  {% capture default_seo_title %}{{ page.title }}｜邹德虎 Dehu Zou{% endcapture %}\n  {% assign seo_title = page.seo_title | default: default_seo_title | strip %}\n  {% capture fallback_description %}{{ content | strip_html | strip_newlines | replace: '  ', ' ' | truncate: 180 }}{% endcapture %}\n  {% assign seo_description = page.description | default: fallback_description | strip %}\n  <title>{{ seo_title | escape }}</title>\n  <meta name="description" content="{{ seo_description | escape }}" />\n  <meta name="author" content="邹德虎 / Dehu Zou" />\n  <link rel="canonical" href="https://zoudehupowersystem.github.io/zoudehu.github.io{{ page.url }}" />\n  <meta property="og:type" content="article" />\n  <meta property="og:title" content="{{ seo_title | escape }}" />\n  <meta property="og:description" content="{{ seo_description | escape }}" />\n  <meta property="og:url" content="https://zoudehupowersystem.github.io/zoudehu.github.io{{ page.url }}" />\n  <script type="application/ld+json">\n  {\n    "@context": "https://schema.org",\n    "@type": "BlogPosting",\n    "headline": {{ page.title | jsonify }},\n    "description": {{ seo_description | jsonify }},\n    "url": {{ 'https://zoudehupowersystem.github.io/zoudehu.github.io' | append: page.url | jsonify }},\n    "mainEntityOfPage": {\n      "@type": "WebPage",\n      "@id": {{ 'https://zoudehupowersystem.github.io/zoudehu.github.io' | append: page.url | jsonify }}\n    },\n    "author": {\n      "@type": "Person",\n      "@id": "https://zoudehupowersystem.github.io/zoudehu.github.io/#dehu-zou",\n      "name": "邹德虎",\n      "alternateName": "Dehu Zou",\n      "url": "https://zoudehupowersystem.github.io/zoudehu.github.io/",\n      "sameAs": ["https://github.com/zoudehupowersystem"]\n    },\n    "publisher": {\n      "@type": "Person",\n      "@id": "https://zoudehupowersystem.github.io/zoudehu.github.io/#dehu-zou",\n      "name": "邹德虎 / Dehu Zou"\n    },\n    "inLanguage": "zh-CN"\n  }\n  </script>'''
+          if old not in s:
+              raise RuntimeError('Expected article head block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Helpers for per-article front matter.
+          def clean_text(x):
+              x = re.sub(r'!\[[^\]]*\]\([^)]*\)', '', x)
+              x = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', x)
+              x = re.sub(r'<[^>]+>', '', x)
+              x = re.sub(r'[`*_>#|]', '', x)
+              x = re.sub(r'\$[^$]+\$', '', x)
+              x = re.sub(r'https?://\S+', '', x)
+              x = re.sub(r'\s+', ' ', x).strip()
+              return x
+
+          def first_description(body, title):
+              chunks = re.split(r'\n\s*\n', body)
+              for chunk in chunks:
+                  t = clean_text(chunk)
+                  if not t:
+                      continue
+                  if t.startswith(title):
+                      continue
+                  if t.startswith('作者：') or t.startswith('202'):
+                      continue
+                  if chunk.lstrip().startswith(('#', '$$', '```', '|', '![', '<style', '<div')):
+                      continue
+                  if re.match(r'^\d+[\.、]\s', t):
+                      continue
+                  if len(t) >= 45:
+                      return (t[:165] + '…') if len(t) > 165 else t
+              return f'{title}。邹德虎（Dehu Zou）的电力系统、工程技术与计算仿真专题文章。'
+
+          custom_titles = {
+              '深入理解潮流计算': '深入理解潮流计算：工程视角、节点类型与牛顿法｜邹德虎 Dehu Zou',
+              '矩阵思维下的潮流计算': '矩阵思维下的潮流计算：Ybus、复功率雅可比与高性能实现｜邹德虎 Dehu Zou',
+              '论电力系统仿真': '论电力系统仿真：EMT、实时仿真与工业软件｜邹德虎 Dehu Zou',
+              '谈谈电力系统状态估计': '电力系统状态估计：工程实践、量测与数据处理｜邹德虎 Dehu Zou',
+              'C++优化技术': 'C++优化技术：缓存、并行与高性能工程实践｜邹德虎 Dehu Zou',
+              '计算机系统之旅': '计算机系统之旅：处理器、存储器与系统级编程｜邹德虎 Dehu Zou',
+              '职业生涯回顾与思考': '邹德虎（Dehu Zou）的职业生涯回顾与工程研发思考',
+          }
+
+          for p in sorted(Path('.').glob('*.md')):
+              if p.name in {'README.md', '曼尼托巴水电局的创业史.md', 'manitoba-hydro-pscad-rtds-history.md'}:
+                  continue
+              text = p.read_text(encoding='utf-8')
+              m = re.match(r'\A---\s*\n(.*?)\n---\s*\n(.*)\Z', text, flags=re.S)
+              if not m or 'layout: article' not in m.group(1):
+                  continue
+              fm, body = m.group(1), m.group(2)
+              tm = re.search(r'^title:\s*["\']?(.*?)["\']?\s*$', fm, flags=re.M)
+              if not tm:
+                  continue
+              title = tm.group(1).strip().strip('"\'')
+              seo_title = custom_titles.get(title, f'{title}｜邹德虎 Dehu Zou')
+              desc = first_description(body, title)
+              fm = re.sub(r'\nseo_title:.*?(?=\n\w|\Z)', '', fm, flags=re.S)
+              fm = re.sub(r'\ndescription:.*?(?=\n\w|\Z)', '', fm, flags=re.S)
+              fm += '\nseo_title: ' + json.dumps(seo_title, ensure_ascii=False)
+              fm += '\ndescription: ' + json.dumps(desc, ensure_ascii=False)
+              p.write_text('---\n' + fm + '\n---\n\n' + body.lstrip('\n'), encoding='utf-8')
+
+          # 3) Manitoba series keeps its visual design, but gains a proper HTML head and SEO metadata.
+          zh = Path('曼尼托巴水电局的创业史.md')
+          text = zh.read_text(encoding='utf-8')
+          m = re.match(r'\A---\s*\n(.*?)\n---\s*\n(.*)\Z', text, flags=re.S)
+          if not m:
+              raise RuntimeError('Chinese Manitoba front matter not found')
+          body = m.group(2)
+          fm = '''layout: manitoba\ntitle: "曼尼托巴水电局的创业史"\nlang: zh-CN\nseo_title: "曼尼托巴水电局的创业史：PSCAD、RTDS 与实时电磁仿真的诞生｜邹德虎"\ndescription: "从纳尔逊河HVDC工程出发，梳理Manitoba Hydro、Dennis Woodford、EMTDC/PSCAD、Manitoba HVDC Research Centre、RTDS Technologies及曼尼托巴大学之间数十年的技术研发、工程验证与产业化历史。"'''
+          zh.write_text('---\n' + fm + '\n---\n\n' + body.lstrip('\n'), encoding='utf-8')
+
+          en = Path('manitoba-hydro-pscad-rtds-history.md')
+          text = en.read_text(encoding='utf-8')
+          m = re.match(r'\A---\s*\n(.*?)\n---\s*\n(.*)\Z', text, flags=re.S)
+          if not m:
+              raise RuntimeError('English Manitoba front matter not found')
+          body = m.group(2)
+          fm = '''layout: manitoba\ntitle: "From the Nelson River to PSCAD and RTDS: Manitoba’s Power-System Simulation Story"\nlang: en\nseo_title: "History of PSCAD and RTDS: Manitoba Hydro, EMTDC and Real-Time Simulation | Dehu Zou"\ndescription: "A technical history of Manitoba Hydro, Dennis Woodford, EMTDC/PSCAD, the Manitoba HVDC Research Centre, RTDS Technologies, the University of Manitoba, real-time EMT simulation, and the commercialization path from utility engineering problems to global simulation products."'''
+          en.write_text('---\n' + fm + '\n---\n\n' + body.lstrip('\n'), encoding='utf-8')
+
+          PY
+          rm -f '.github/workflows/apply-seo-structured-data-once.yml'
+
+      - name: Commit SEO changes
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Improve homepage and article SEO metadata'
+          git push
