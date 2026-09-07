@@ -1,0 +1,107 @@
+name: Replace generic image alt text once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/replace-generic-alt-text-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  replace-alt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace generic Markdown image alt text
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              '深入理解对称分量法.md': {
+                  'dc1.png': 'Fortescue 1918年对称分量法经典论文首页',
+                  'dc5.png': '任意三相不对称波形及正负零序分量分析示意图',
+                  'dc6.png': '三相不对称支路导纳导致正负零序分量耦合的电路示意图',
+                  'dc7.png': '架空三相线路相间电容与对地电容电流分布示意图',
+                  'dc8.png': '三相线路正序负序零序电容与系统电容电流关系总结',
+                  'para.png': '500kV和220kV架空线路正序零序阻抗及电容参数对比表',
+              },
+              'C++优化技术.md': {
+                  '图片9.png': 'AGC和AVC控制指令的对抗式检测与安全处置流程',
+              },
+              '电力系统仿真会议参会记录.md': {
+                  '图片7.png': '调相机直流UPFC风电光伏等设备与各类电力系统仿真模型的对应关系',
+                  '图片8.png': '设备厂家黑盒白盒数字模型通过实时仿真非实时仿真和对比验证的建模流程',
+              },
+              '计算机中的基础数学函数.md': {
+                  '浮点数.jpg': '正弦函数泰勒展开与低阶多项式逼近曲线对比',
+              },
+              '谈谈电力系统状态估计.md': {
+                  '图片5.png': '电力系统状态估计从SCADA量测预处理到坏数据辨识和熟数据断面的工程流程',
+                  '图片6.png': '状态估计离线程序研究态程序与实时程序的实验室和现场测试验证流程',
+              },
+              '深入理解潮流计算.md': {
+                  '潮流1.png': '同步发电机无功电压调差特性与PV节点无功电压曲线',
+                  '潮流2.png': '潮流计算在规划设计在线安全分析自动控制和调度辅助决策中的应用场景',
+                  '潮流4.png': '工业级潮流计算软件从需求分析到算法开发代码开发测试及模型接口的架构',
+              },
+              '从音乐到电力系统一次调频.md': {
+                  '图片1.png': '两个相近频率正弦波叠加形成拍频包络的波形示意图',
+                  '图片2.png': '省级电网500kV骨干网与多个220kV分区的层级结构示意图',
+                  '图片3.png': '500kV区域A与220kV区域B经联络电抗连接的两区域等值模型',
+              },
+              '短路与短路比.md': {
+                  '短路1.png': '短路电流周期分量非周期直流分量与峰值随时间衰减的波形示意图',
+                  '短路2.png': '电源等值电势经电抗接入无穷大系统的并网模型',
+              },
+              '工业系统演化与设计.md': {
+                  '图片4.png': '制造业ISA-95与电力系统IEC61850和IEC61970分层架构对比图',
+              },
+              '论电力系统仿真.md': {
+                  '测试.png': '变电站站控层新旧监控系统遥控功能的软件在环测试方案',
+              },
+              '计算机系统之旅.md': {
+                  '计算机系统.jpg': '计算机系统处理器存储器与IO总线总体架构图',
+                  '流水线.png': 'CPU五级指令流水线IF-ID-EX-MEM-WB时序示意图',
+                  '存储山.png': '计算机寄存器缓存内存与磁盘的存储层次和存储山示意图',
+                  'MESI.png': '多核CPU MESI缓存一致性协议可视化模拟界面',
+                  '服务器.png': '多路服务器主板上的NUMA节点与处理器内存布局实物图',
+              },
+          }
+
+          total = 0
+          for filename, mapping in replacements.items():
+              p = Path(filename)
+              text = p.read_text(encoding='utf-8')
+              for image, alt in mapping.items():
+                  old = f'![alt text]({image})'
+                  new = f'![{alt}]({image})'
+                  count = text.count(old)
+                  if count != 1:
+                      raise RuntimeError(f'{filename}: expected exactly one occurrence of {old!r}, found {count}')
+                  text = text.replace(old, new)
+                  total += 1
+              p.write_text(text, encoding='utf-8')
+
+          leftovers = []
+          for p in Path('.').glob('*.md'):
+              if '![alt text]' in p.read_text(encoding='utf-8'):
+                  leftovers.append(p.name)
+          if leftovers:
+              raise RuntimeError('Generic alt text remains in: ' + ', '.join(leftovers))
+          print(f'Replaced {total} generic image alt texts.')
+          PY
+          rm -f '.github/workflows/replace-generic-alt-text-once.yml'
+
+      - name: Commit alt text improvements
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Improve descriptive alt text for article images'
+          git push
