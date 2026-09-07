@@ -1,0 +1,17 @@
+---
+layout: null
+permalink: /sitemap.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://zoudehupowersystem.github.io/zoudehu.github.io/</loc>
+  </url>
+{% for p in site.pages %}
+{% if p.url contains '.html' %}
+  <url>
+    <loc>https://zoudehupowersystem.github.io/zoudehu.github.io{{ p.url | uri_escape }}</loc>
+  </url>
+{% endif %}
+{% endfor %}
+</urlset>
