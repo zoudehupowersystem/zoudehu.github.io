@@ -1,0 +1,149 @@
+name: Rebuild blog articles from Markdown once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rebuild-articles-from-markdown-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare converter
+        run: |
+          python3 -m pip install --quiet beautifulsoup4
+          if ! command -v pandoc >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq pandoc
+          fi
+          pandoc --version | head -1
+
+      - name: Recover clean Markdown sources and retire generated HTML
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          from urllib.parse import unquote
+          import json
+          import re
+          import subprocess
+
+          root = Path('.')
+          excluded = {'index.html', 'google4bde02efacd5b9f8.html'}
+          rebuilt = []
+
+          def fix_local_uri(value):
+              if not value or not value.lower().startswith('file:///'):
+                  return value
+              decoded = unquote(value)
+              # Handles both normal URL separators and Windows backslashes.
+              parts = re.split(r'[\\/]+', decoded)
+              return parts[-1] if parts else value
+
+          for html_path in sorted(root.glob('*.html')):
+              if html_path.name in excluded or html_path.name.startswith('google'):
+                  continue
+
+              raw = html_path.read_text(encoding='utf-8')
+              soup = BeautifulSoup(raw, 'html.parser')
+              body = soup.body
+              if body is None:
+                  print('Skip: no body:', html_path.name)
+                  continue
+
+              # Remove the temporary banner previously injected into legacy HTML.
+              for node in body.select('.zdh-blog-topic'):
+                  node.decompose()
+
+              # Repair local file:// image/link paths left by the old VS Code export.
+              for img in body.find_all('img'):
+                  if img.get('src'):
+                      img['src'] = fix_local_uri(img.get('src'))
+              for a in body.find_all('a'):
+                  if a.get('href'):
+                      a['href'] = fix_local_uri(a.get('href'))
+
+              # Preserve the original TeX contained in KaTeX annotations.  Replace
+              # rendered KaTeX DOM with placeholders before HTML -> Markdown.
+              maths = []
+              def placeholder(tex, display):
+                  key = f'ZZZMATH{len(maths):05d}ZZZ'
+                  maths.append((key, tex.strip(), display))
+                  return key
+
+              for node in list(body.select('.katex-display')):
+                  ann = node.find('annotation', attrs={'encoding': 'application/x-tex'})
+                  if ann:
+                      node.replace_with(placeholder(ann.get_text(), True))
+
+              for node in list(body.select('.katex')):
+                  ann = node.find('annotation', attrs={'encoding': 'application/x-tex'})
+                  if ann:
+                      node.replace_with(placeholder(ann.get_text(), False))
+
+              # Keep only the article body. Pandoc reconstructs clean Markdown,
+              # removing the old VS Code/Katex presentation boilerplate.
+              fragment = ''.join(str(x) for x in body.contents)
+              proc = subprocess.run(
+                  ['pandoc', '-f', 'html', '-t', 'gfm', '--wrap=none'],
+                  input=fragment,
+                  text=True,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.PIPE,
+                  check=True,
+              )
+              md = proc.stdout.strip() + '\n'
+
+              for key, tex, display in maths:
+                  if display:
+                      repl = '\n$$\n' + tex + '\n$$\n'
+                  else:
+                      repl = '$' + tex + '$'
+                  md = md.replace(key, repl)
+
+              # Normalize excessive blank lines introduced around display math.
+              md = re.sub(r'\n{4,}', '\n\n\n', md).strip() + '\n'
+
+              # Determine title from Markdown/HTML heading.
+              h1 = body.find('h1')
+              title = h1.get_text(' ', strip=True) if h1 else html_path.stem
+              permalink = '/' + html_path.stem + '.html'
+              front = (
+                  '---\n'
+                  'layout: article\n'
+                  f'title: {json.dumps(title, ensure_ascii=False)}\n'
+                  f'permalink: {json.dumps(permalink, ensure_ascii=False)}\n'
+                  '---\n\n'
+              )
+
+              md_path = html_path.with_suffix('.md')
+              md_path.write_text(front + md, encoding='utf-8')
+              html_path.unlink()
+              rebuilt.append((html_path.name, md_path.name))
+
+          # Keep the intentionally retired AI article absent.
+          for dead in [Path('AI与电力系统.html'), Path('AI与电力系统.md')]:
+              if dead.exists():
+                  dead.unlink()
+
+          print(f'Rebuilt {len(rebuilt)} articles as Markdown sources:')
+          for old, new in rebuilt:
+              print(' ', old, '->', new)
+          PY
+          rm -f '.github/workflows/rebuild-articles-from-markdown-once.yml'
+
+      - name: Commit rebuilt Markdown site
+        run: |
+          git config user.name 'Dehu Zou'
+          git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
+          git add -A
+          git commit -m 'Rebuild blog articles from Markdown with clean layout'
+          git push
