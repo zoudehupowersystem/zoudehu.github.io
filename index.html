@@ -471,6 +471,177 @@
       font-family: var(--mono);
     }
 
+
+    /* 2026 homepage refinement */
+    .hero { padding: 34px 32px 28px; }
+    .hero-grid { grid-template-columns: 172px 1fr; gap: 30px; }
+    .avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 22px;
+      border-color: rgba(155, 231, 255, 0.22);
+      box-shadow: 0 18px 48px rgba(0,0,0,.34), 0 0 0 1px rgba(91,181,255,.06);
+    }
+    .hero-eyebrow {
+      margin-bottom: 9px;
+      color: rgba(155, 231, 255, .76);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .name h1 { font-size: 38px; letter-spacing: .2px; }
+    .name .en-name {
+      font-size: .56em;
+      font-weight: 500;
+      color: rgba(255,255,255,.64);
+      letter-spacing: .2px;
+    }
+    .name .title {
+      border-color: rgba(91,181,255,.22);
+      background: rgba(91,181,255,.07);
+      color: rgba(225,241,255,.80);
+    }
+    .subtitle {
+      margin-top: 13px;
+      max-width: 68ch;
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: rgba(255,255,255,.72);
+    }
+    .focus-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+    .focus-tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .quick-actions { margin-top: 16px; }
+    .btn { box-shadow: none; }
+    .btn.primary {
+      border-color: rgba(91,181,255,.40);
+      background: linear-gradient(180deg, rgba(91,181,255,.18), rgba(91,181,255,.10));
+      color: #eaf7ff;
+    }
+    .kpi {
+      padding: 20px 24px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.018), rgba(255,255,255,0));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .tagline {
+      padding: 13px 15px;
+      border-color: rgba(231,201,122,.16);
+      background: linear-gradient(90deg, rgba(231,201,122,.075), rgba(91,181,255,.045));
+      color: rgba(255,255,255,.78);
+    }
+    .kpi-card {
+      position: relative;
+      overflow: hidden;
+      padding: 16px 15px 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.032));
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .kpi-card:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(91,181,255,.78), rgba(155,231,255,.18), transparent);
+    }
+    .kpi-card:hover { transform: translateY(-2px); border-color: rgba(91,181,255,.24); }
+    .kpi-card .num { font-size: 25px; letter-spacing: -.3px; }
+    .main { padding: 26px 24px 12px; }
+    .section { margin-bottom: 30px; scroll-margin-top: 22px; }
+    .section h2 { margin-bottom: 13px; font-size: 20px; letter-spacing: .15px; }
+    .section h2:before {
+      width: 4px;
+      height: 19px;
+      border-radius: 999px;
+      box-shadow: none;
+    }
+    .card { padding: 18px 18px 16px; border-radius: 15px; }
+    .article-item {
+      min-height: 48px;
+      padding: 11px 13px;
+      border-radius: 11px;
+      transition: transform .14s ease, border-color .14s ease, background .14s ease;
+    }
+    .article-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(91,181,255,.28);
+      background: rgba(91,181,255,.07);
+      text-decoration: none;
+    }
+    .article-item small { color: rgba(155,231,255,.48); }
+    .timeline .item {
+      border-left: 2px solid rgba(91,181,255,.36);
+      background: linear-gradient(90deg, rgba(91,181,255,.045), rgba(255,255,255,.018));
+      border-radius: 10px;
+      padding: 13px 14px 12px;
+    }
+    .timeline .item .when { color: rgba(155,231,255,.56); }
+    .timeline .item .what { line-height: 1.78; }
+    details.more {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    details.more summary {
+      cursor: pointer;
+      list-style: none;
+      color: rgba(155,231,255,.72);
+      font-size: 13px;
+      user-select: none;
+    }
+    details.more summary::-webkit-details-marker { display: none; }
+    details.more summary:after { content: "  +"; color: var(--faint); }
+    details.more[open] summary:after { content: "  −"; }
+    .more-list { margin-top: 12px; }
+    .contact-card { display: grid; gap: 2px; }
+    .contact-row {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      align-items: baseline;
+    }
+    .contact-row:last-child { border-bottom: 0; }
+    .contact-label {
+      color: var(--faint);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .contact-value { color: rgba(255,255,255,.78); font-size: 14px; overflow-wrap: anywhere; }
+    .service-list li { margin: 9px 0; }
+    .section-note {
+      margin: -5px 0 13px;
+      color: var(--faint);
+      font-size: 12.5px;
+      line-height: 1.65;
+    }
+    @media (max-width: 700px) {
+      .hero { padding: 24px 18px 21px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 18px; }
+      .avatar { width: 126px; height: 126px; border-radius: 18px; }
+      .name h1 { font-size: 31px; }
+      .kpi { padding: 17px 16px 20px; }
+      .main { padding: 22px 16px 10px; }
+      .contact-row { grid-template-columns: 68px 1fr; }
+    }
+
     /* Responsive */
     @media (max-width: 920px) {
       .kpi-grid {
@@ -558,21 +729,28 @@
           </div>
 
           <div>
+            <div class="hero-eyebrow">POWER SYSTEMS · REAL-TIME EMT · INDUSTRIAL SOFTWARE</div>
             <div class="name">
-              <h1>邹德虎 <span style="font-size:.62em;font-weight:500;color:rgba(255,255,255,.72);letter-spacing:.2px;">Dehu Zou</span></h1>
-              <div class="title">电力系统研发架构师・技术总监</div>
+              <h1>邹德虎 <span class="en-name">Dehu Zou</span></h1>
+              <div class="title">电力系统研发架构师 · 技术总监</div>
             </div>
 
             <p class="subtitle">
-              高级工程师，长期从事电力系统研发与工程应用。研究与工程方向聚焦于：电力系统建模仿真、调度控制与自动化技术；面向电力行业研发“可工程化、可验证、可产品化”的系统级解决方案
+              高级工程师，长期从事电力系统建模仿真、实时电磁暂态（EMT）、调度自动化与工业软件研发。工作横跨电网现场、数值算法、实时计算、软件架构与产品化。
             </p>
 
+            <div class="focus-tags" aria-label="专业方向">
+              <span class="focus-tag">实时 EMT 仿真</span>
+              <span class="focus-tag">电力系统建模与计算</span>
+              <span class="focus-tag">调度自动化</span>
+              <span class="focus-tag">高性能 C++</span>
+            </div>
+
             <div class="quick-actions">
+              <a class="btn primary" href="#articles"><strong>文章</strong><span class="mono">Blog</span></a>
+              <a class="btn" href="#experience"><strong>履历</strong><span class="mono">Experience</span></a>
+              <a class="btn" href="#papers"><strong>代表成果</strong><span class="mono">Work</span></a>
               <a class="btn" href="#contact"><strong>联系</strong><span class="mono">Contact</span></a>
-              <a class="btn" href="#articles"><strong>文章</strong><span class="mono">Blog</span></a>
-              <a class="btn" href="#experience"><strong>履历</strong><span class="mono">CV</span></a>
-              <a class="btn" href="#patents"><strong>专利</strong><span class="mono">IP</span></a>
-              <a class="btn" href="#papers"><strong>论文</strong><span class="mono">Pubs</span></a>
             </div>
           </div>
         </div>
@@ -581,7 +759,7 @@
       <!-- KPI / EXPERT SUMMARY -->
       <div class="kpi">
         <div class="tagline">
-           面向电网调度自动化与主动配电网仿真等复杂系统，兼具工程现场规模化落地经验与平台级研发能力
+           从电网调度现场到实时 EMT 平台：关注复杂系统的可计算、可验证与可产品化。
         </div>
 
         <div style="height: 12px;"></div>
@@ -741,12 +919,7 @@
             </div>
             <div class="item">
               <div class="when">2013–2017</div>
-              <div class="what">工程师/高级工程师，国电南瑞科技股份有限公司（系统研发中心）：D5000 研究与开发；项目《面向城市骨干电网广域层次化自愈系统关键技术及应用》作为第2完成人，
-                经中国电机工程学会鉴定为“成果整体达到国际领先水平”。</div>
-            </div>
-            <div class="item">
-              <div class="when">2017（财务统计）</div>
-              <div class="what">据国电南瑞科技股份有限公司财务统计：本人主持研发的部分产品新增销售额 11104.15 万元，新增利润 3822 万元。</div>
+              <div class="what">工程师/高级工程师，国电南瑞科技股份有限公司（系统研发中心）：从事 D5000 研发；参与成果《面向城市骨干电网广域层次化自愈系统关键技术及应用》（第2完成人），经中国电机工程学会鉴定为“整体达到国际领先水平”。据公司 2017 年财务统计，本人主持研发的部分产品新增销售额 11104.15 万元、新增利润 3822 万元。</div>
             </div>
             <div class="item">
               <div class="when">2018–2020.02</div>
@@ -754,15 +927,15 @@
             </div>
             <div class="item">
               <div class="when">2020.02–至今</div>
-              <div class="what">东南大学专职科研人员  江苏鲲游能源技术有限公司技术总监：主持研发国产自主可控电力系统实时电磁仿真平台 ADS-RTSim（工业级 C++，总代码量近 50
-                万行）；平台已产品化，并在江苏、浙江、贵州等多个电网工程应用。</div>
+              <div class="what">东南大学专职科研人员；江苏鲲游能源技术有限公司技术总监。主持研发国产自主可控电力系统实时电磁仿真平台 ADS-RTSim（工业级 C++，代码规模 50 万+）；平台已产品化，并在江苏、浙江、贵州等多个电网工程应用。</div>
             </div>
           </div>
         </div>
 
         <!-- AWARDS -->
         <div class="section" id="awards">
-          <h2>主要获奖情况</h2>
+          <h2>代表性获奖</h2>
+          <div class="section-note">优先展示国家电网、南方电网及省级/集团级代表性科技与专利奖励。</div>
           <div class="card">
             <ul class="list">
               <li>[1] 国家电网有限公司科技进步三等奖（第二完成人）, 2019（面向城市骨干电网广域层次化自愈系统关键技术及应用）</li>
@@ -770,63 +943,69 @@
               <li>[3] 江苏省电力科学技术进步奖三等奖（第二完成人）, 2019（面向城市骨干电网广域层次化自愈系统关键技术及应用）</li>
               <li>[4] 中国南方电网公司专利奖三等奖（第三完成人）, 2015（厂站多进线备自投方法及装置）</li>
               <li>[5] 广东电网公司专利奖二等奖（第三完成人）, 2015（厂站多进线备自投方法及装置）</li>
+            </ul>
+            <details class="more">
+              <summary>展开其余获奖与论文奖励</summary>
+              <ul class="list more-list">
               <li>[6] 南瑞集团有限公司科技进步三等奖（第一完成人）, 2019（城市级智能电网主站备自投控制系统研究及应用）</li>
               <li>[7] 南瑞集团有限公司五小创新三等奖（第一完成人）, 2019（高性能拓扑分析研究开发及其在电力系统分析控制中的应用）</li>
               <li>[8] 南瑞集团有限公司专利奖二等奖（第三完成人）, 2023（提高电力系统状态估计计算速度的方法）</li>
               <li>[9] 国网电力科学研究院优秀论文二等奖（第一作者兼通信作者）, 2014（网络备自投系统在地调EMS中的应用）</li>
               <li>[10] 中国电机工程学会电力系统自动化专委会优秀论文（通信作者）, 2016（并行稀疏系统直接求解库 SuperLUMT 在状态估计中的应用）</li>
               <li>[11] 江苏省优秀硕士论文, 2011（电力系统自适应 Terminal 滑模控制研究）</li>
-            </ul>
+              </ul>
+            </details>
           </div>
         </div>
 
         <!-- CONTACT & PUBLIC -->
         <div class="section" id="contact">
-          <h2>公开资料与联系方式</h2>
+          <h2>联系方式与公开资料</h2>
           <div class="contact-grid">
-            <div class="card">
-              <p>
-                截至目前（2026-08），公开发表论文 33 篇；获得授权发明专利 27 项；参与编写国家标准 1 项（GBT 40616-2021
-                村镇光伏发电站集群控制系统仿真测试技术要求）。
-                开通微信公众号“深入理解电力系统”，已发表原创文章100多篇，关注人数超过 1.5 万人，平均每篇文章阅读人数约 4000 人。
-                担任东南大学电子学院硕士研究生校外指导教师。
-              </p>
-
-              <p class="muted" style="margin-top: 12px;">
-                Email：<a href="mailto:zoudehu@gmail.com">zoudehu@gmail.com</a><br />
-                Email：<a href="mailto:zoupaper@163.com">zoupaper@163.com</a>
-              </p>
-
-              <p class="muted" style="margin-top: 12px;">
-                ORCID：
-                <a href="https://orcid.org/0000-0002-3359-0145" target="_blank" rel="me noopener noreferrer">
-                  0000-0002-3359-0145
-                </a>
-              </p>
+            <div class="card contact-card">
+              <div class="contact-row">
+                <div class="contact-label">Email</div>
+                <div class="contact-value"><a href="mailto:zoudehu@gmail.com">zoudehu@gmail.com</a></div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-label">Email</div>
+                <div class="contact-value"><a href="mailto:zoupaper@163.com">zoupaper@163.com</a></div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-label">ORCID</div>
+                <div class="contact-value"><a href="https://orcid.org/0000-0002-3359-0145" target="_blank" rel="me noopener noreferrer">0000-0002-3359-0145</a></div>
+              </div>
+              <div class="contact-row">
+                <div class="contact-label">GitHub</div>
+                <div class="contact-value"><a href="https://github.com/zoudehupowersystem" target="_blank" rel="me noopener noreferrer">github.com/zoudehupowersystem</a></div>
+              </div>
             </div>
 
-            <div class="qr" aria-label="微信二维码">
+            <div class="qr" aria-label="微信公众号二维码">
               <div class="fine" style="margin-bottom: 10px;">微信公众号：深入理解电力系统</div>
-              <img src="weixin.jpg" alt="微信二维码" />
-              <div class="fine" style="margin-top: 10px;">扫码关注｜学术与工程深度内容</div>
+              <img src="weixin.jpg" alt="深入理解电力系统微信公众号二维码" />
+              <div class="fine" style="margin-top: 10px;">电力系统 · 工程技术 · 计算与仿真</div>
             </div>
           </div>
         </div>
 
         <!-- SERVICE -->
         <div class="section" id="service">
-          <h2>行业与社区服务</h2>
+          <h2>行业、学术与开源服务</h2>
           <div class="card">
-            <ul class="list">
-              <li>[1] OPSEN 开源项目发起人与维护者（GitHub：zoudehupowersystem，2025–至今）：围绕电力系统建模、仿真、分析、应用的开源生态，包含潮流计算、暂态仿真、CPS 仿真、知识图谱、IEC61850 调试等多个方向</li>
-              <li>[2] IEEE 2025 第三届电力科学与技术国际会议（ICPST 2025）- T2 分会场主席（Session Chair），中国·昆明（2025）：主持分会场议程与 Q&A，保障时序与交流质量</li>
+            <ul class="list service-list">
+              <li>OPSEN 开源项目发起人与维护者（GitHub：zoudehupowersystem，2025–至今），围绕电力系统建模、仿真、分析与应用构建开源工具生态。</li>
+              <li>IEEE 2025 第三届电力科学与技术国际会议（ICPST 2025）T2 分会场主席（Session Chair）。</li>
+              <li>参与编写国家标准 GBT 40616-2021《村镇光伏发电站集群控制系统仿真测试技术要求》。</li>
+              <li>东南大学电子学院硕士研究生校外指导教师。</li>
             </ul>
           </div>
         </div>
 
         <!-- PATENTS -->
         <div class="section" id="patents">
-          <h2>主要授权发明专利</h2>
+          <h2>代表性授权发明专利</h2>
+          <div class="section-note">总授权数量见页面顶部；此处保留与状态估计、备自投、建模和实时仿真直接相关的代表性条目。</div>
           <div class="card">
             <ul class="list">
               <li>[1] 201410175518.9. 一种大电网参数辨识估计方法. 发明人：<strong>邹德虎</strong>; 龚成明; 王毅（本专利获得国家电网有限公司专利奖三等奖）</li>
@@ -835,6 +1014,10 @@
               <li>[4] 202511334913.1. 一种精确零序阻抗的无插值混合线路仿真模型及其构建方法. 发明人：<strong>邹德虎</strong>; 柳伟; 王基传; 梁发存; 陈林曦; 俞强</li>
               <li>[5] 202411661908.7. 一种电力系统实时仿真波形高性能动态刷新方法. 发明人：<strong>邹德虎</strong>; 王基传; 柳伟; 周苏洋; 梁发存; 陈林曦</li>
               <li>[6] 202410797742.5. 一种电力系统建模的多层级图模一体化方法及系统. 发明人：王基传; <strong>邹德虎</strong>; 柳伟; 周苏洋; 梁发存; 陈林曦</li>
+            </ul>
+            <details class="more">
+              <summary>展开其余代表性授权发明专利</summary>
+              <ul class="list more-list">
               <li>[7] 202211175264.1. 基于 LSTM 预测校正的储能多时间尺度优化控制方法. 发明人：柳伟; 蒋成涛; 顾伟; <strong>邹德虎</strong></li>
               <li>[8] 202110737623.7. 一种变流器硬件加速并行多速率电磁暂态实时仿真方法. 发明人：顾伟; 李珂; 曹阳; <strong>邹德虎</strong>; 蒋啸宇</li>
               <li>[9] 202010590540.5. 一种基于交叉初始化的换流器参数化恒导纳建模方法. 发明人：顾伟; 曹阳; <strong>邹德虎</strong>; 李珂; 史坤</li>
@@ -847,13 +1030,15 @@
               <li>[16] 201510418589.1. 一种调度系统遥测数据的在线滤波方法. 发明人：王毅; <strong>邹德虎</strong>; 戴则梅; 闪鑫; 苏大威; 徐春雷</li>
               <li>[17] 201210226842.X. 广域备自投模型自适应生成方法. 发明人：<strong>邹德虎</strong>; 王仲达; 徐柳飞; 龚成明; 李雷; 张文斌; 葛亮亮</li>
               <li>[18] UNIVERSITY S .Converter parameterized constant admittance modeling method based on cross initialization:US202117605589[P].2022-09-20.发明人：Wei Gu;Yang Cao;<strong>Dehu Zou</strong>;Ke Li;Kun Shi </li>
-            </ul>
+              </ul>
+            </details>
           </div>
         </div>
 
         <!-- PAPERS -->
         <div class="section" id="papers">
-          <h2>主要论文</h2>
+          <h2>代表性论文</h2>
+          <div class="section-note">总发表数量见页面顶部；优先展示近年实时 EMT 研究及具有代表性的早期工作。</div>
           <div class="card">
             <ul class="list">
               <li>[1] <strong>Zou, D.</strong>; Gu, W.; Liu, W. Deadline-Deterministic Sparse Matrix Updates with Versioned Factor Banks for Real-Time Distribution Network EMT Simulation. Electronics 2026, 15, 3934. https://doi.org/10.3390/electronics15173934.</li>
@@ -861,19 +1046,24 @@
               <li>[3] <strong>D. Zou</strong>, K. Hu, W. Liu and W. Gu, "Efficient Controller Simulation for Power Systems Based on Hybrid Topology-AI Simulation Framework," 2025 IEEE 3rd International Conference on Power Science and Technology (ICPST), Kunming, China, 2025, pp. 216-221, doi: 10.1109/ICPST65050.2025.11089396.</li>
               <li>[4] <strong>邹德虎</strong>, 徐希, 闪鑫, 等. 基于集中校核与分散控制的备自投系统[J]. 电力系统保护与控制, 2017, 45(21):140-146.</li>
               <li>[5] 陈荃韡, 龚成明, 赵晋泉, 王毅, <strong>邹德虎(通信)</strong>. 并行稀疏系统直接求解库 SuperLUMT 在状态估计中的应用[J]. 电力系统自动化, 2017, 41(03):83-88.</li>
+            </ul>
+            <details class="more">
+              <summary>展开其余代表性论文</summary>
+              <ul class="list more-list">
               <li>[6] <strong>邹德虎</strong>, 王仲达, 徐柳飞, 等. 网络备自投系统在地调 EMS 中的应用[J]. 电力系统自动化, 2013, 37(17):106-111.</li>
               <li>[7] <strong>邹德虎</strong>, 王宝华. SVC 与发电机励磁的逆推 Terminal 滑模协调控制[J]. 电网技术, 2011, 35(04):108-111. DOI:10.13335/j.1000-3673.pst.2011.04.023.</li>
               <li>[8] <strong>邹德虎</strong>, 王宝华. 多机电力系统自适应鲁棒 Terminal 滑模励磁控制[J]. 电力自动化设备, 2010, 30(12):79-82.</li>
               <li>[9] <strong>邹德虎</strong>, 王宝华. 汽轮发电机自适应 Terminal 滑模综合控制[J]. 电力系统保护与控制, 2010, 38(17):33-36+42.</li>
               <li>[10] <strong>Z. Dehu</strong>, S. Yulin and W. Baohua, "Terminal Sliding Mode Valving Controller Based on COI Signal for Multi-machine Power Systems," 2010 International Conference on Electrical and Control Engineering, Wuhan, China, 2010, pp. 4346-4349.</li>
-            </ul>
+              </ul>
+            </details>
           </div>
         </div>
       </div>
 
       <div class="foot">
-        <div>© 邹德虎｜电力系统研发</div>
-        <div class="mono">Built for clarity, verification, and credibility.</div>
+        <div>© 邹德虎 · Dehu Zou</div>
+        <div class="mono">Power Systems · Real-Time Simulation · Engineering</div>
       </div>
     </div>
   </div>
