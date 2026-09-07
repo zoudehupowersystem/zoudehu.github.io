@@ -642,6 +642,70 @@
       .contact-row { grid-template-columns: 68px 1fr; }
     }
 
+
+    /* Blog topic groups */
+    .article-groups {
+      display: grid;
+      gap: 18px;
+    }
+    .article-group {
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 15px;
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
+    }
+    .article-group-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding-bottom: 11px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .article-group-title {
+      margin: 0;
+      color: rgba(255,255,255,.92);
+      font-size: 16px;
+      line-height: 1.45;
+      font-weight: 700;
+      letter-spacing: .15px;
+    }
+    .article-group-desc {
+      margin-top: 4px;
+      color: var(--faint);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+    .article-group-count {
+      flex: 0 0 auto;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(91,181,255,.16);
+      background: rgba(91,181,255,.055);
+      color: rgba(155,231,255,.55);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .article-group .articles-grid {
+      gap: 8px 12px;
+    }
+    .article-group .article-item {
+      min-height: 44px;
+      background: rgba(255,255,255,.025);
+    }
+    .article-group .article-item span {
+      font-size: 13.5px;
+    }
+    .article-group .article-item small {
+      color: rgba(155,231,255,.58);
+    }
+    @media (max-width: 700px) {
+      .article-group { padding: 13px; }
+      .article-group-head { gap: 10px; }
+      .article-group-title { font-size: 15px; }
+    }
+
     /* Responsive */
     @media (max-width: 920px) {
       .kpi-grid {
@@ -791,97 +855,129 @@
       <div class="main">
         <!-- ARTICLES -->
         <div class="section" id="articles">
-          <h2>博客文章列表</h2>
-          <div class="card">
+          <h2>博客文章</h2>
+          <div class="section-note">按主题浏览，共 29 篇。</div>
+          <div class="article-groups">
+          <section class="article-group" aria-label="电力系统原理与计算">
+            <div class="article-group-head">
+              <div>
+                <h3 class="article-group-title">电力系统原理与计算</h3>
+                <div class="article-group-desc">从物理机理、潮流、短路和对称分量，到状态估计、频率与控制。</div>
+              </div>
+              <div class="article-group-count">10 篇</div>
+            </div>
             <div class="articles-grid" role="list">
-              <a class="article-item" role="listitem" href="职业生涯回顾与思考.html">
-                <span>职业生涯回顾与思考</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="曼尼托巴水电局的创业史.html">
-                <span>曼尼托巴系列（中文）：曼尼托巴水电局的创业史</span><small>中文</small>
-              </a>
-              <a class="article-item" role="listitem" href="manitoba-hydro-pscad-rtds-history.html">
-                <span>Manitoba Series (English): From the Nelson River to PSCAD and RTDS</span><small>EN</small>
-              </a>
               <a class="article-item" role="listitem" href="从物理学出发理解电力系统.html">
-                <span>从物理学出发理解电力系统</span><small>READ</small>
+                <span>从物理学出发理解电力系统</span>
               </a>
               <a class="article-item" role="listitem" href="深入理解潮流计算.html">
-                <span>深入理解潮流计算</span><small>READ</small>
+                <span>深入理解潮流计算</span>
               </a>
               <a class="article-item" role="listitem" href="矩阵思维下的潮流计算.html">
                 <span>矩阵思维下的潮流计算</span><small>NEW</small>
               </a>
+              <a class="article-item" role="listitem" href="重温牛顿-拉夫逊法.html">
+                <span>重温牛顿-拉夫逊法</span>
+              </a>
               <a class="article-item" role="listitem" href="深入理解对称分量法.html">
-                <span>深入理解对称分量法</span><small>READ</small>
+                <span>深入理解对称分量法</span>
               </a>
               <a class="article-item" role="listitem" href="电力系统近似常数与近似公式.html">
-                <span>电力系统近似常数与近似公式</span><small>READ</small>
+                <span>电力系统近似常数与近似公式</span>
               </a>
               <a class="article-item" role="listitem" href="短路与短路比.html">
-                <span>短路与短路比</span><small>READ</small>
+                <span>短路与短路比</span>
               </a>
               <a class="article-item" role="listitem" href="谈谈电力系统状态估计.html">
-                <span>谈谈电力系统状态估计</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="电网调度技术思考.html">
-                <span>电网调度技术思考</span><small>READ</small>
+                <span>谈谈电力系统状态估计</span>
               </a>
               <a class="article-item" role="listitem" href="从音乐到电力系统一次调频.html">
-                <span>从音乐到电力系统一次调频</span><small>READ</small>
+                <span>从音乐到电力系统一次调频</span>
               </a>
               <a class="article-item" role="listitem" href="电力系统控制的思考.html">
-                <span>电力系统控制的思考</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="论电力系统仿真.html">
-                <span>论电力系统仿真</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="电力系统仿真会议参会记录.html">
-                <span>电力系统仿真会议参会记录</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="谈谈电力系统嵌入式装置.html">
-                <span>谈谈电力系统嵌入式装置</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="论电力安全生产.html">
-                <span>论电力安全生产</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="论电力数字化转型.html">
-                <span>论电力数字化转型</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="电力系统中的编程语言.html">
-                <span>电力系统中的编程语言</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="电力通信科普.html">
-                <span>电力通信科普</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="电力系统二次设备科普.html">
-                <span>电力系统二次设备科普</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="工业系统演化与设计.html">
-                <span>工业系统演化与设计</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="分布式计算机系统.html">
-                <span>分布式计算机系统</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="计算机中的基础数学函数.html">
-                <span>计算机中的基础数学函数</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="论系统工程.html">
-                <span>论系统工程</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="C++优化技术.html">
-                <span>C++优化技术</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="计算机系统之旅.html">
-                <span>计算机系统之旅</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="谈谈汇编语言.html">
-                <span>谈谈汇编语言</span><small>READ</small>
-              </a>
-              <a class="article-item" role="listitem" href="重温牛顿-拉夫逊法.html">
-                <span>重温牛顿-拉夫逊法</span><small>READ</small>
+                <span>电力系统控制的思考</span>
               </a>
             </div>
+          </section>
+          <section class="article-group" aria-label="仿真、调度与工程实践">
+            <div class="article-group-head">
+              <div>
+                <h3 class="article-group-title">仿真、调度与工程实践</h3>
+                <div class="article-group-desc">实时仿真、调度自动化、二次设备、工业软件，以及工程研发与产业化实践。</div>
+              </div>
+              <div class="article-group-count">12 篇</div>
+            </div>
+            <div class="articles-grid" role="list">
+              <a class="article-item" role="listitem" href="职业生涯回顾与思考.html">
+                <span>职业生涯回顾与思考</span>
+              </a>
+              <a class="article-item" role="listitem" href="曼尼托巴水电局的创业史.html">
+                <span>曼尼托巴系列：曼尼托巴水电局的创业史</span><small>中文</small>
+              </a>
+              <a class="article-item" role="listitem" href="manitoba-hydro-pscad-rtds-history.html">
+                <span>Manitoba Series: From the Nelson River to PSCAD and RTDS</span><small>EN</small>
+              </a>
+              <a class="article-item" role="listitem" href="电网调度技术思考.html">
+                <span>电网调度技术思考</span>
+              </a>
+              <a class="article-item" role="listitem" href="论电力系统仿真.html">
+                <span>论电力系统仿真</span>
+              </a>
+              <a class="article-item" role="listitem" href="电力系统仿真会议参会记录.html">
+                <span>电力系统仿真会议参会记录</span>
+              </a>
+              <a class="article-item" role="listitem" href="谈谈电力系统嵌入式装置.html">
+                <span>谈谈电力系统嵌入式装置</span>
+              </a>
+              <a class="article-item" role="listitem" href="电力系统二次设备科普.html">
+                <span>电力系统二次设备科普</span>
+              </a>
+              <a class="article-item" role="listitem" href="论电力安全生产.html">
+                <span>论电力安全生产</span>
+              </a>
+              <a class="article-item" role="listitem" href="论电力数字化转型.html">
+                <span>论电力数字化转型</span>
+              </a>
+              <a class="article-item" role="listitem" href="工业系统演化与设计.html">
+                <span>工业系统演化与设计</span>
+              </a>
+              <a class="article-item" role="listitem" href="论系统工程.html">
+                <span>论系统工程</span>
+              </a>
+            </div>
+          </section>
+          <section class="article-group" aria-label="计算机与信息技术">
+            <div class="article-group-head">
+              <div>
+                <h3 class="article-group-title">计算机与信息技术</h3>
+                <div class="article-group-desc">高性能计算、系统软件、编程语言、通信，以及计算机体系结构。</div>
+              </div>
+              <div class="article-group-count">7 篇</div>
+            </div>
+            <div class="articles-grid" role="list">
+              <a class="article-item" role="listitem" href="电力系统中的编程语言.html">
+                <span>电力系统中的编程语言</span>
+              </a>
+              <a class="article-item" role="listitem" href="电力通信科普.html">
+                <span>电力通信科普</span>
+              </a>
+              <a class="article-item" role="listitem" href="分布式计算机系统.html">
+                <span>分布式计算机系统</span>
+              </a>
+              <a class="article-item" role="listitem" href="计算机中的基础数学函数.html">
+                <span>计算机中的基础数学函数</span>
+              </a>
+              <a class="article-item" role="listitem" href="C++优化技术.html">
+                <span>C++优化技术</span>
+              </a>
+              <a class="article-item" role="listitem" href="计算机系统之旅.html">
+                <span>计算机系统之旅</span>
+              </a>
+              <a class="article-item" role="listitem" href="谈谈汇编语言.html">
+                <span>谈谈汇编语言</span>
+              </a>
+            </div>
+          </section>
           </div>
         </div>
 
