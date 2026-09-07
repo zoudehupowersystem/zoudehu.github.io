@@ -1,0 +1,44 @@
+name: Editorial review validation
+on:
+  push:
+    branches: [editorial-review-2026-09-07]
+    paths:
+      - '.github/workflows/editorial-review.yml'
+      - '.editorial/**'
+permissions:
+  contents: write
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: editorial-review-2026-09-07
+          fetch-depth: 0
+      - name: Apply checked editorial patches when present
+        shell: bash
+        run: |
+          if test -f .editorial/apply.py; then
+            python .editorial/apply.py
+            python - <<'PY'
+          import subprocess
+          paths = subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0')
+          excluded = {'曼尼托巴水电局的创业史.md', 'manitoba-hydro-pscad-rtds-history.md'}
+          for path in filter(None, paths):
+              assert '/' not in path and path.endswith('.md') and path not in excluded, path
+          PY
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- '*.md'
+            if ! git diff --cached --quiet; then
+              git commit -m 'Apply verified editorial corrections to blog articles'
+              git push origin HEAD:editorial-review-2026-09-07
+            fi
+          fi
+      - name: Export source for text and formula validation
+        run: git archive --format=tar --output=/tmp/editorial-source.tar HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: editorial-source
+          path: /tmp/editorial-source.tar
+          retention-days: 2
