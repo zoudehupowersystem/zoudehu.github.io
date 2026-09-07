@@ -18,11 +18,12 @@ jobs:
           fetch-depth: 0
 
       - name: Revise older articles
-        run: python3 _tools/revise_older_articles.py
+        run: python3 _tools/run_revision.py
 
       - name: Remove one-time files and commit
         run: |
           rm -f _tools/revise_older_articles.py
+          rm -f _tools/run_revision.py
           rm -f .github/workflows/revise-older-articles-once.yml
           git config user.name 'Dehu Zou'
           git config user.email '166377112+zoudehupowersystem@users.noreply.github.com'
