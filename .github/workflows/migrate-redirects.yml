@@ -1,0 +1,93 @@
+name: Point legacy site to new root site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/migrate-redirects.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  redirect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for new root site
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://zoudehupowersystem.github.io/'
+          article='https://zoudehupowersystem.github.io/%E8%AE%BA%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B.html'
+          ok=0
+          for i in $(seq 1 36); do
+            c1=$(curl -L -sS -o /dev/null -w '%{http_code}' "$root" || true)
+            c2=$(curl -L -sS -o /dev/null -w '%{http_code}' "$article" || true)
+            echo "attempt $i: root=$c1 article=$c2"
+            if [ "$c1" = '200' ] && [ "$c2" = '200' ]; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok" = '1'
+
+      - name: Add migration redirects and canonicals
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          old = 'https://zoudehupowersystem.github.io/zoudehu.github.io'
+          new = 'https://zoudehupowersystem.github.io'
+
+          # Legacy homepage: canonical + immediate static redirect to new root.
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8').replace(old, new)
+          canonical = '  <link rel="canonical" href="https://zoudehupowersystem.github.io/" />\n'
+          refresh = '  <meta http-equiv="refresh" content="0;url=https://zoudehupowersystem.github.io/" />\n'
+          if refresh not in s:
+              s = s.replace(canonical, canonical + refresh)
+          p.write_text(s, encoding='utf-8')
+
+          # Legacy article layouts: every old article redirects to its same-path root URL.
+          for fn in ['_layouts/article.html', '_layouts/manitoba.html']:
+              p = Path(fn)
+              s = p.read_text(encoding='utf-8').replace(old, new)
+              canonical = '  <link rel="canonical" href="https://zoudehupowersystem.github.io{{ page.url }}" />\n'
+              refresh = '  <meta http-equiv="refresh" content="0;url=https://zoudehupowersystem.github.io{{ page.url }}" />\n'
+              if refresh not in s:
+                  s = s.replace(canonical, canonical + refresh)
+              # Keep the legacy page usable if redirect is interrupted; Home always goes to the new root.
+              s = s.replace('href="{{ \'/\' | relative_url }}"', 'href="https://zoudehupowersystem.github.io/"')
+              p.write_text(s, encoding='utf-8')
+
+          Path('robots.txt').write_text(
+              'User-agent: *\nAllow: /\n\nSitemap: https://zoudehupowersystem.github.io/sitemap.xml\n',
+              encoding='utf-8'
+          )
+          PY
+
+          rm -f .github/workflows/migrate-redirects.yml
+
+      - name: Validate legacy migration signals
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'http-equiv="refresh" content="0;url=https://zoudehupowersystem.github.io/"' index.html
+          grep -q 'http-equiv="refresh" content="0;url=https://zoudehupowersystem.github.io{{ page.url }}"' _layouts/article.html
+          grep -q 'rel="canonical" href="https://zoudehupowersystem.github.io{{ page.url }}"' _layouts/article.html
+          grep -q 'Sitemap: https://zoudehupowersystem.github.io/sitemap.xml' robots.txt
+
+      - name: Commit legacy redirects
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Redirect legacy GitHub Pages URLs to new root personal site'
+          git push origin main
