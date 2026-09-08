@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zoudehupowersystem.github.io/zoudehu.github.io/sitemap.xml
+Sitemap: https://zoudehupowersystem.github.io/sitemap.xml
